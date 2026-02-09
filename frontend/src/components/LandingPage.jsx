@@ -1,39 +1,3 @@
-// import LeadForm from './LeadForm.jsx';
-
-// function LandingPage() {
-//   return (
-//     <main>
-//       <section style={{ background: '#e2e8f0', padding: '48px 0' }}>
-//         <div className="container" style={{ display: 'grid', gap: '16px' }}>
-//           <div>
-//             <h2 style={{ fontSize: '28px', marginBottom: '8px' }}>
-//               Done-For-You Branding, UI/UX & Web Development – Tell Us About Your Project
-//             </h2>
-//             <p style={{ fontSize: '16px', color: '#475569' }}>
-//               Share a few details and we will craft a tailored plan to bring your digital vision to life.
-//             </p>
-//           </div>
-//           <div className="card">
-//             <LeadForm />
-//           </div>
-//         </div>
-//       </section>
-
-//       <section style={{ padding: '32px 0' }}>
-//         <div className="container">
-//           <h3>Why work with us</h3>
-//           <ul>
-//             <li>Senior designers and developers aligned to your brand.</li>
-//             <li>Clear communication with weekly updates.</li>
-//             <li>Flexible engagement from discovery to launch.</li>
-//           </ul>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// }
-
-// export default LandingPage;
 
 import LeadForm from "./LeadForm.jsx";
 
@@ -74,7 +38,7 @@ function LandingPage() {
               overflow: "hidden",
             }}
           >
-            {/* Replace this iframe src with your real hosted video link later */}
+            {/* Replace this iframe src with our real hosted video link  */}
             <iframe
               width="100%"
               height="100%"

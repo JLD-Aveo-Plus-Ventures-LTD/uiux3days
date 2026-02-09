@@ -36,7 +36,7 @@ function BookingPage() {
 
   const todayUk = useMemo(
     () => formatDateForZone(new Date(), "Europe/London"),
-    []
+    [],
   );
 
   const [date, setDate] = useState(() => todayUk);
@@ -105,17 +105,17 @@ function BookingPage() {
 
     try {
       await bookLeadAppointment(leadId, {
-        appointmentTime: selectedSlot.start_utc, // ✅ use selectedSlot
+        appointmentTime: selectedSlot.start_utc, // use selectedSlot
         clientTimezone: deviceTimezone,
         contactMethod,
       });
 
-      setBookingSuccess(selectedSlot); // ✅ store selectedSlot
+      setBookingSuccess(selectedSlot); // store selectedSlot
 
       setSlots((prev) =>
         Array.isArray(prev)
           ? prev.filter((slot) => slot.start_utc !== selectedSlot.start_utc)
-          : []
+          : [],
       );
 
       // tracking (safe no-op if you stub it)

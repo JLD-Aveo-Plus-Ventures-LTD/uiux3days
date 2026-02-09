@@ -5,8 +5,8 @@ const {
   getLeadById,
   updateLead,
   getSummary,
-  getAvailableSlots, // ⭐ NEW
-  bookAppointment, // ⭐ NEW
+  getAvailableSlots,
+  bookAppointment,
 } = require("../controllers/leadController");
 const adminAuth = require("../middleware/auth");
 

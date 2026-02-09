@@ -21,9 +21,13 @@ async function createLead(req, res) {
     return res.status(400).json({ message: "Validation failed", errors });
   }
 
-  const { e164, error: phoneError, country } = normalizePhoneNumber(
+  const {
+    e164,
+    error: phoneError,
+    country,
+  } = normalizePhoneNumber(
     req.body.phone,
-    req.body.phone_country || DEFAULT_COUNTRY
+    req.body.phone_country || DEFAULT_COUNTRY,
   );
 
   if (!e164) {
@@ -42,10 +46,10 @@ async function createLead(req, res) {
 
     // Notify admin + optional autoresponder
     sendAdminNotification(lead).catch((err) =>
-      console.error("Admin email error:", err.message)
+      console.error("Admin email error:", err.message),
     );
     sendLeadConfirmation(lead).catch((err) =>
-      console.error("Lead email error:", err.message)
+      console.error("Lead email error:", err.message),
     );
 
     // IMPORTANT: return the created lead (includes lead.id)
@@ -122,9 +126,13 @@ async function updateLead(req, res) {
     }
 
     if (req.body.phone) {
-      const { e164, error: phoneError, country } = normalizePhoneNumber(
+      const {
+        e164,
+        error: phoneError,
+        country,
+      } = normalizePhoneNumber(
         req.body.phone,
-        req.body.phone_country || DEFAULT_COUNTRY
+        req.body.phone_country || DEFAULT_COUNTRY,
       );
 
       if (!e164) {
@@ -170,7 +178,7 @@ async function getSummary(req, res) {
     await Promise.all(
       statuses.map(async (status) => {
         byStatus[status] = await Lead.count({ where: { status } });
-      })
+      }),
     );
 
     return res.json({ totalLeads, newThisWeek, byStatus });
@@ -181,7 +189,7 @@ async function getSummary(req, res) {
 }
 
 /**
- * 🔹 Get available slots for a given date (in UK time)
+ * Get available slots for a given date (in UK time)
  * Route example: GET /api/leads/slots?date=2025-11-30
  */
 async function getAvailableSlots(req, res) {
@@ -235,7 +243,7 @@ async function getAvailableSlots(req, res) {
     const bookedTimesMs = new Set(
       bookedLeads
         .filter((l) => l.appointment_time)
-        .map((l) => l.appointment_time.getTime())
+        .map((l) => l.appointment_time.getTime()),
     );
 
     // Generate candidate slots
@@ -283,7 +291,7 @@ async function getAvailableSlots(req, res) {
 }
 
 /**
- * 🔹 Book an appointment for a specific lead
+ * Book an appointment for a specific lead
  * Route example: POST /api/leads/:id/book
  * Body: { appointmentTime: string (ISO), clientTimezone?: string }
  * appointmentTime is expected as an ISO string in UTC or local UK time.
@@ -321,7 +329,7 @@ async function bookAppointment(req, res) {
 
         const normalizedForBooking = normalizePhoneNumber(
           lead.phone,
-          lead.phone_country || DEFAULT_COUNTRY
+          lead.phone_country || DEFAULT_COUNTRY,
         );
 
         if (!normalizedForBooking.e164) {
@@ -382,8 +390,7 @@ async function bookAppointment(req, res) {
         if (conflicting) {
           return {
             status: 409,
-            message:
-              "This time has just been booked. Please choose another.",
+            message: "This time has just been booked. Please choose another.",
           };
         }
 
@@ -403,7 +410,7 @@ async function bookAppointment(req, res) {
         lead.preferred_contact_method = normalizedContactMethod;
 
         return { status: 200, lead, contactMethod: normalizedContactMethod };
-      }
+      },
     );
 
     if (result?.status && result.status !== 200) {
@@ -425,9 +432,7 @@ async function bookAppointment(req, res) {
     sendAdminBookingNotification(lead, {
       contactMethod: preferredContactMethod,
       clientTimezone,
-    }).catch((err) =>
-      console.error("Booking admin email error:", err.message)
-    );
+    }).catch((err) => console.error("Booking admin email error:", err.message));
 
     sendBookingConfirmationSms(lead, {
       contactMethod: preferredContactMethod,
