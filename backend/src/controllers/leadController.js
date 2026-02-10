@@ -45,12 +45,12 @@ async function createLead(req, res) {
     const lead = await Lead.create(req.body);
 
     // Notify admin + optional autoresponder
-    sendAdminNotification(lead).catch((err) =>
-      console.error("Admin email error:", err.message),
-    );
-    sendLeadConfirmation(lead).catch((err) =>
-      console.error("Lead email error:", err.message),
-    );
+    // sendAdminNotification(lead).catch((err) =>
+    //   console.error("Admin email error:", err.message),
+    // );
+    // sendLeadConfirmation(lead).catch((err) =>
+    //   console.error("Lead email error:", err.message),
+    // );
 
     // IMPORTANT: return the created lead (includes lead.id)
     return res.status(201).json({ lead });

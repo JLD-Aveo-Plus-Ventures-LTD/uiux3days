@@ -1,0 +1,129 @@
+.secure-seat-container {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 60px 20px;
+    background-color: #ffffff;
+}
+
+.secure-seat-title {
+    font-size: 32px;
+    font-weight: 600;
+    font-family: var(--font-secondary);
+    text-align: center;
+    color: var(--color-black);
+    margin-bottom: 60px;
+    line-height: 1.2;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.step-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 240px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.icon-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: transform 0.3s ease;
+}
+
+.step-card:hover .icon-circle {
+    transform: scale(1.05);
+}
+
+.step-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-black);
+    margin-bottom: 12px;
+}
+
+.step-description {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--color-black);
+    line-height: 1.5;
+    max-width: 200px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .secure-seat-container {
+        padding: 0 20px;
+    }
+
+    .secure-seat-title {
+        font-size: 2.25rem;
+        margin-bottom: 40px;
+    }
+
+    .steps-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .step-card {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .icon-circle {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+    }
+
+    .step-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .step-description {
+        font-size: 20px;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .secure-seat-container {
+        padding: 30px 16px;
+    }
+
+    .secure-seat-title {
+        margin-bottom: 32px;
+    }
+
+    .icon-circle {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+/* Desktop - Large Screens */
+@media (min-width: 1024px) {
+    .steps-container {
+        gap: 80px;
+    }
+
+    .step-card {
+        max-width: 260px;
+    }
+}

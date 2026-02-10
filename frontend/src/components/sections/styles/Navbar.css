@@ -1,0 +1,23 @@
+/* Header Styles */
+.header {
+    width: 100%;
+    background: var(--color-dark-green);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.header-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 760px) {
+    .header-container {
+        width: 100%;
+        /* max-width: 300px; */
+    }
+    .header-container img {
+        width: 100%;
+    }
+}
