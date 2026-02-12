@@ -34,7 +34,7 @@ const HeroSection = () => {
                 <div className="event-date">
                     <span className="date-label">Event Date:</span>
                     <span className="date-value">
-                        LIVE: March 6 – 8th, 2026
+                        LIVE: February 23rd – 27th, 2026
                     </span>
                 </div>
             </main>
