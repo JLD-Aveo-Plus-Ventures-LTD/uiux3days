@@ -31,13 +31,16 @@ const SecureYourSeat = () => {
 
             <div className="steps-container">
                 {steps.map((step) => (
-                    <div key={step.id} className="step-card">
-                        <img src={step.icon} className="icon-circle" />
-                        <h3 className="step-title">{step.title}</h3>
-                        <p className="step-description">
-                            {step.description}
-                        </p>
-                    </div>
+                    <a href="#">
+                        {" "}
+                        <div key={step.id} className="step-card">
+                            <img src={step.icon} className="icon-circle" />
+                            <h3 className="step-title">{step.title}</h3>
+                            <p className="step-description">
+                                {step.description}
+                            </p>
+                        </div>
+                    </a>
                 ))}
             </div>
         </div>

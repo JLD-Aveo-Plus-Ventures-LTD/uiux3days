@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../services/api.js";
 import { normalizePhoneNumber } from "../../utils/phone.js";
 import "./styles/BookingForm.css";
@@ -28,6 +29,7 @@ const interviewMethods = [
 ];
 
 const BookingForm = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -133,20 +135,8 @@ const BookingForm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setSubmitStatus({
-                    type: "success",
-                    message: "Booking submitted successfully!",
-                });
-                // Reset form
-                setFormData({
-                    fullName: "",
-                    email: "",
-                    countryCode: "+234",
-                    mobileNumber: "",
-                    currentStatus: "Student",
-                    designStruggle: "My designs look amateur",
-                    interviewMethod: "Normal Phone Call",
-                });
+                // Success - redirect to booking page with leadId
+                navigate(`/booking?leadId=${data.lead.id}`);
             } else {
                 const errorData = await response.json();
                 const errorMsg = errorData?.errors?.join(", ") || errorData?.message || "Submission failed";
