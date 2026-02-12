@@ -185,3 +185,16 @@
         gap: 64px;
     }
 }
+
+@media (max-width: 760px) {
+    .footer-logo {
+        width: 100%;
+    }
+    .footer-logo img {
+        width: 100%;
+    }
+
+    .footer-content {
+        grid-template-columns: auto auto;
+    }
+}

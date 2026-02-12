@@ -56,12 +56,28 @@
     color: #333;
     transition: all 0.3s ease;
     font-family: inherit;
+    color-scheme: light;
 }
 
 .date-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* Green calendar icon and selected dates */
+.date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(45%) sepia(89%) saturate(632%) hue-rotate(85deg)
+        brightness(94%) contrast(92%);
+}
+
+.date-input::-webkit-datetime-edit-day-field:focus,
+.date-input::-webkit-datetime-edit-month-field:focus,
+.date-input::-webkit-datetime-edit-year-field:focus {
+    background-color: #16a34a;
+    color: white;
+    border-radius: 4px;
 }
 
 .date-helper-text {
@@ -115,10 +131,23 @@
 }
 
 .time-slot-button:hover:not(:disabled) {
-    border-color: #3b82f6;
-    background: #f0f7ff;
+    border-color: #16a34a;
+    background: #f0fdf4;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
+}
+
+.time-slot-button.selected {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #166534;
+    font-weight: 600;
+}
+
+.time-slot-button.selected:hover:not(:disabled) {
+    border-color: #16a34a;
+    background: #dcfce7;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
 }
 
 .time-slot-button:active:not(:disabled) {
@@ -128,6 +157,38 @@
 .time-slot-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* Confirm Booking Button */
+.confirm-booking-button {
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: none;
+    background: #16a34a;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.confirm-booking-button:hover:not(:disabled) {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+}
+
+.confirm-booking-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.confirm-booking-button:disabled {
+    background: #86efac;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Booking Success Card */
@@ -266,31 +327,30 @@
 }
 
 .modal-button-cancel {
-    border: 1.5px solid #cbd5e1;
-    background: white;
-    color: #0f172a;
+    background: #e5e7eb;
+    color: #374151;
+    border: none;
 }
 
 .modal-button-cancel:hover {
-    border-color: #94a3b8;
-    background: #f8fafc;
+    background: #d1d5db;
 }
 
 .modal-button-cancel:active {
-    background: #f1f5f9;
+    background: #c7cad1;
 }
 
 .modal-button-confirm {
-    background: #0ea5e9;
+    background: #16a34a;
     color: white;
     border: none;
     min-width: 100px;
 }
 
 .modal-button-confirm:hover:not(:disabled) {
-    background: #0284c7;
+    background: #15803d;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
 }
 
 .modal-button-confirm:active:not(:disabled) {
@@ -298,8 +358,9 @@
 }
 
 .modal-button-confirm:disabled {
-    background: #7dd3fc;
+    background: #86efac;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Mobile Responsive */
@@ -344,6 +405,11 @@
     .time-slot-button {
         padding: 10px 14px;
         font-size: 13px;
+    }
+
+    .confirm-booking-button {
+        padding: 13px 20px;
+        font-size: 15px;
     }
 
     .confirm-modal-card {
@@ -392,5 +458,10 @@
         flex: 1 1 calc(50% - 4px);
         padding: 10px 8px;
         font-size: 12px;
+    }
+
+    .confirm-booking-button {
+        padding: 12px 18px;
+        font-size: 14px;
     }
 }

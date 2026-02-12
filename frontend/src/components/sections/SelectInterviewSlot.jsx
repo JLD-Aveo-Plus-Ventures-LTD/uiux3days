@@ -23,7 +23,8 @@ function SelectInterviewSlot({ leadId }) {
     const detectClientTimezone = useMemo(() => {
         try {
             return (
-                Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/London"
+                Intl.DateTimeFormat().resolvedOptions().timeZone ||
+                "Europe/London"
             );
         } catch (error) {
             console.error("Timezone detection failed", error);
@@ -60,7 +61,9 @@ function SelectInterviewSlot({ leadId }) {
                 setSlots(data.slots || []);
             } catch (err) {
                 console.error(err);
-                setSlotsError("Unable to load available times. Please try again.");
+                setSlotsError(
+                    "Unable to load available times. Please try again.",
+                );
             } finally {
                 setLoadingSlots(false);
             }
@@ -70,9 +73,13 @@ function SelectInterviewSlot({ leadId }) {
 
     const handleSelectSlot = (slot) => {
         setBookingError("");
-        setContactMethod("Call");
         setBookingSuccess(null);
         setSelectedSlot(slot);
+    };
+
+    const handleConfirmBookingClick = () => {
+        if (!selectedSlot) return;
+        setContactMethod("Call");
         setShowConfirm(true);
     };
 
@@ -94,7 +101,9 @@ function SelectInterviewSlot({ leadId }) {
 
             setSlots((prev) =>
                 Array.isArray(prev)
-                    ? prev.filter((slot) => slot.start_utc !== selectedSlot.start_utc)
+                    ? prev.filter(
+                          (slot) => slot.start_utc !== selectedSlot.start_utc,
+                      )
                     : [],
             );
 
@@ -108,7 +117,8 @@ function SelectInterviewSlot({ leadId }) {
         } catch (err) {
             console.error(err);
             let errorMessage =
-                err?.message || "Something went wrong while booking. Please try again.";
+                err?.message ||
+                "Something went wrong while booking. Please try again.";
             if (err?.status === 409 && err?.message) {
                 errorMessage = err.message;
             }
@@ -123,20 +133,20 @@ function SelectInterviewSlot({ leadId }) {
     const formatLocalTime = (isoString, withDate = false) => {
         const options = withDate
             ? {
-                hour: "2-digit",
-                minute: "2-digit",
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                timeZone: detectClientTimezone,
-                timeZoneName: "short",
-            }
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  timeZone: detectClientTimezone,
+                  timeZoneName: "short",
+              }
             : {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: detectClientTimezone,
-                timeZoneName: "short",
-            };
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  timeZone: detectClientTimezone,
+                  timeZoneName: "short",
+              };
 
         return new Date(isoString).toLocaleString([], options);
     };
@@ -152,28 +162,21 @@ function SelectInterviewSlot({ leadId }) {
 
     return (
         <section className="select-interview-section">
-            <div className="container" style={{ display: "grid", gap: "24px", maxWidth: "900px" }}>
+            <div
+                className="container"
+                style={{ display: "grid", gap: "24px", maxWidth: "900px" }}
+            >
                 {/* Section Title */}
                 <div>
                     <h2 className="select-interview-title">
                         Final Step: Select Your Interview Date & Time
                     </h2>
                     <p className="select-interview-subtitle">
-                        We have received your application! Since we only accept 15 students for the <br />
-                        March 6-8 cohort, we need to have a quick 10-minute chat to ensure you are a right fit.
+                        We have received your application! Since we only accept
+                        15 students for the <br />
+                        March 6-8 cohort, we need to have a quick 10-minute chat
+                        to ensure you are a right fit.
                     </p>
-                </div>
-
-                {/* Video */}
-                <div className="video-container">
-                    <iframe
-                        width="100%"
-                        height="100%"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                        title="Consultation intro"
-                        style={{ border: "none" }}
-                        allowFullScreen
-                    />
                 </div>
 
                 {/* Date selector */}
@@ -188,8 +191,8 @@ function SelectInterviewSlot({ leadId }) {
                     />
                     <p className="date-helper-text">
                         Times adjust automatically to your local timezone (
-                        {deviceTimezone}). Slots are shown between 08:00 and 18:00 UK
-                        time.
+                        {deviceTimezone}). Slots are shown between 08:00 and
+                        18:00 UK time.
                     </p>
                 </div>
 
@@ -201,13 +204,19 @@ function SelectInterviewSlot({ leadId }) {
                     {slotsError && <p className="error-text">{slotsError}</p>}
 
                     {!loadingSlots && !slotsError && slots.length === 0 && (
-                        <p>No available times for this day. Try another date.</p>
+                        <p>
+                            No available times for this day. Try another date.
+                        </p>
                     )}
 
                     {!loadingSlots && !slotsError && slots.length > 0 && (
                         <div className="times-grid">
                             {slots.map((slot) => {
-                                const localTime = formatLocalTime(slot.start_utc);
+                                const localTime = formatLocalTime(
+                                    slot.start_utc,
+                                );
+                                const isSelected =
+                                    selectedSlot?.start_utc === slot.start_utc;
 
                                 return (
                                     <button
@@ -215,7 +224,7 @@ function SelectInterviewSlot({ leadId }) {
                                         type="button"
                                         onClick={() => handleSelectSlot(slot)}
                                         disabled={booking}
-                                        className="time-slot-button"
+                                        className={`time-slot-button ${isSelected ? "selected" : ""}`}
                                     >
                                         {localTime}
                                     </button>
@@ -223,12 +232,22 @@ function SelectInterviewSlot({ leadId }) {
                             })}
                         </div>
                     )}
+
+                    {/* Confirm Booking Button */}
+                    {!loadingSlots && !slotsError && slots.length > 0 && (
+                        <button
+                            type="button"
+                            onClick={handleConfirmBookingClick}
+                            disabled={!selectedSlot || booking}
+                            className="confirm-booking-button"
+                        >
+                            Confirm Booking
+                        </button>
+                    )}
                 </div>
 
                 {/* Booking error */}
-                {bookingError && (
-                    <p className="error-text">{bookingError}</p>
-                )}
+                {bookingError && <p className="error-text">{bookingError}</p>}
 
                 {/* Booking success */}
                 {bookingSuccess && (
@@ -237,16 +256,20 @@ function SelectInterviewSlot({ leadId }) {
                         <p>
                             Your consultation is scheduled for{" "}
                             <strong>
-                                {formatLocalTime(bookingSuccess.start_utc, true)}
+                                {formatLocalTime(
+                                    bookingSuccess.start_utc,
+                                    true,
+                                )}
                             </strong>
                             .
                         </p>
                         <p style={{ marginTop: "8px" }}>
-                            Preferred contact method: <strong>{contactMethod}</strong>
+                            Preferred contact method:{" "}
+                            <strong>{contactMethod}</strong>
                         </p>
                         <p>
-                            Please accept the calendar invite sent to your email and keep an
-                            eye on your inbox for confirmation.
+                            Please accept the calendar invite sent to your email
+                            and keep an eye on your inbox for confirmation.
                         </p>
                     </div>
                 )}
@@ -259,12 +282,14 @@ function SelectInterviewSlot({ leadId }) {
                         <h3 style={{ marginTop: 0 }}>Confirm your booking</h3>
                         <p style={{ marginBottom: "8px" }}>
                             Selected time:{" "}
-                            <strong>{formatLocalTime(selectedSlot.start_utc, true)}</strong> (
-                            {detectClientTimezone})
+                            <strong>
+                                {formatLocalTime(selectedSlot.start_utc, true)}
+                            </strong>{" "}
+                            ({detectClientTimezone})
                         </p>
                         <p className="modal-helper-text">
-                            You can only have one active appointment at a time. Please check
-                            this date and time before confirming.
+                            You can only have one active appointment at a time.
+                            Please check this date and time before confirming.
                         </p>
 
                         <label htmlFor="contact-method" className="modal-label">
