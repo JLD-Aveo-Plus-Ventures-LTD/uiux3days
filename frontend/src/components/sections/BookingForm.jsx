@@ -1,16 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../services/api.js";
-import { normalizePhoneNumber } from "../../utils/phone.js";
+import { normalizePhoneNumber, loadCountries, DEFAULT_COUNTRY } from "../../utils/phone.js";
 import "./styles/BookingForm.css";
-
-const countryCodes = [
-    { code: "+234", country: "Nigeria", isoCode: "NG" },
-    { code: "+1", country: "USA", isoCode: "US" },
-    { code: "+44", country: "UK", isoCode: "GB" },
-    { code: "+91", country: "India", isoCode: "IN" },
-    { code: "+86", country: "China", isoCode: "CN" },
-];
 
 const designStruggles = [
     "My designs look amateur",
@@ -30,10 +22,12 @@ const interviewMethods = [
 
 const BookingForm = () => {
     const navigate = useNavigate();
+    const [countries, setCountries] = useState([]);
+
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
-        countryCode: "+234",
+        countryCode: DEFAULT_COUNTRY,
         mobileNumber: "",
         currentStatus: "Student",
         designStruggle: "My designs look amateur",
@@ -58,6 +52,15 @@ const BookingForm = () => {
             }));
         }
     };
+
+    // Load full country list once
+    useEffect(() => {
+        let mounted = true;
+        loadCountries().then((list) => {
+            if (mounted) setCountries(list || []);
+        }).catch(() => {});
+        return () => { mounted = false; };
+    }, []);
 
     const validateForm = () => {
         const newErrors = {};
@@ -95,9 +98,8 @@ const BookingForm = () => {
         setSubmitStatus(null);
 
         try {
-            // Find the ISO country code for the selected dial code
-            const selectedCountry = countryCodes.find(c => c.code === formData.countryCode);
-            const isoCode = selectedCountry?.isoCode || "GB"; // Default to GB if not found
+            // Selected country ISO (we store ISO codes in the select)
+            const isoCode = formData.countryCode || DEFAULT_COUNTRY;
 
             // Normalize phone number
             const { e164: normalizedPhone, error: phoneError } = normalizePhoneNumber(
@@ -210,11 +212,13 @@ const BookingForm = () => {
                                 onChange={handleInputChange}
                                 className="country-code-select "
                             >
-                                {countryCodes.map((item) => (
-                                    <option key={item.code} value={item.code}>
-                                        {item.country} ({item.code})
-                                    </option>
-                                ))}
+                                {countries.length > 0
+                                    ? countries.map((item) => (
+                                          <option key={item.code} value={item.code}>
+                                              {item.name} ({item.dialCode})
+                                          </option>
+                                      ))
+                                    : null}
                             </select>
                             <input
                                 type="tel"

@@ -97,7 +97,7 @@
 }
 
 .country-code-select {
-    flex: 0 0 160px;
+    flex: 0 0 200px;
     background: var(--color-dark-green) !important;
     color: white !important;
     border: none;
@@ -228,7 +228,7 @@
     }
 
     .country-code-select {
-        flex: 0 0 120px;
+        flex: 0 0 140px;
         padding: 11px 12px;
         font-size: 14px;
     }
