@@ -31,9 +31,9 @@ const SecureYourSeat = () => {
 
             <div className="steps-container">
                 {steps.map((step) => (
-                    <a href="#">
+                    <a key={step.id} href="#">
                         {" "}
-                        <div key={step.id} className="step-card">
+                        <div className="step-card">
                             <img src={step.icon} className="icon-circle" />
                             <h3 className="step-title">{step.title}</h3>
                             <p className="step-description">
