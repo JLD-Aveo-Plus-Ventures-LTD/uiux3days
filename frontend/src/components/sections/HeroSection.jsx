@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styles/HeroSection.css";
 import AiIcon from "../../assets/images/AI.png";
-import videoSrc from "../../assets/videos/landing_page_video.mp4";
+import videoSrc from "../../assets/videos/landing_video.mp4";
 
 const HeroSection = () => {
     const [isPlaying, setIsPlaying] = useState(false);
