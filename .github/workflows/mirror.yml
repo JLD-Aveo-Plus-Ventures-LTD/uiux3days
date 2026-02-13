@@ -18,4 +18,5 @@ jobs:
           git config --global user.name "GitHub Sync"
 
           git remote add personal https://JesuLoDamilare-JLD:${{ secrets.PERSONAL_GITHUB_TOKEN }}@github.com/JesuLoDamilare-JLD/uiux3days.git
-          git push personal --mirror
+          git push personal --all --force
+          git push personal --tags --force
