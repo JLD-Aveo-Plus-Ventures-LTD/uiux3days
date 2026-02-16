@@ -35,7 +35,37 @@ function App() {
               alignItems: "center",
             }}
           >
-            <h1 style={{ margin: 0 }}>JLD Automated Lead Engine</h1>
+            {//Simple public nav (Admin link hidden from visitors) }
+            <nav style={{ display: "flex", gap: "12px" }}>
+              <Link
+                to="/"
+                style={{
+                  padding: "8px 12px",
+                  background: "white",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "6px",
+                  color: "#0f172a",
+                  textDecoration: "none",
+                  fontSize: "14px",
+                }}
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/admin/login"
+                style={{
+                  padding: "8px 12px",
+                  background: "#22c55e",
+                  borderRadius: "6px",
+                  color: "#0f172a",
+                  textDecoration: "none",
+                  fontSize: "14px",
+                }}
+              >
+                Admin
+              </Link>
+            </nav>
           </div>
         </header> */}
 
