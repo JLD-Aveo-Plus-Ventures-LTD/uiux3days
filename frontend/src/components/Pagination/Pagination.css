@@ -1,0 +1,94 @@
+/**
+ * Pagination.css - Styles for pagination controls
+ * 
+ * Features:
+ * - Previous/Next buttons with < > symbols
+ * - Numbered page buttons
+ * - Active page highlighting
+ * - Disabled state
+ * - Ellipsis for large page counts
+ * - Responsive layout
+ */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 0 4px;
+  flex-wrap: wrap;
+}
+
+.pagination__pages {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.pagination__btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination__btn:hover:not(.pagination__btn--disabled):not(.pagination__btn--active) {
+  border-color: #cbd5e1;
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.pagination__btn--active {
+  background-color: #16A34A;
+  color: #ffffff;
+  border-color: #16A34A;
+  font-weight: 600;
+  cursor: default;
+}
+
+.pagination__btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+.pagination__btn--prev,
+.pagination__btn--next {
+  font-weight: 700;
+  min-width: 36px;
+}
+
+.pagination__ellipsis {
+  color: #64748b;
+  font-size: 13px;
+  padding: 0 4px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .pagination {
+    gap: 2px;
+    padding: 8px 0 2px;
+  }
+
+  .pagination__btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .pagination__ellipsis {
+    font-size: 12px;
+    padding: 0 2px;
+  }
+}

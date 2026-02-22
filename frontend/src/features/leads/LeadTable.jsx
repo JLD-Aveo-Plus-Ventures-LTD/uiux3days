@@ -1,6 +1,6 @@
-import DataTable from "./Table/DataTable.jsx";
-import StatusBadge from "./Badge/StatusBadge.jsx";
-import { formatDate, formatLeadStatus, formatAppointmentStatus, formatPhone } from "../utils/formatters.js";
+import DataTable from "../../components/Table/DataTable.jsx";
+import StatusBadge from "../../components/Badge/StatusBadge.jsx";
+import { formatDate, formatLeadStatus, formatAppointmentStatus, formatPhone } from "../../utils/formatters.js";
 
 /**
  * LeadTable - Display list of leads
@@ -32,7 +32,9 @@ function LeadTable({ leads, onSelect }) {
       header: "Status",
       accessorKey: "status",
       render: (value) => (
-        <StatusBadge status={formatLeadStatus(value)} type="lead" />
+        <span style={{ fontSize: "13px", color: "#1f2937" }}>
+          {formatLeadStatus(value)}
+        </span>
       ),
       width: "100px",
     },
@@ -69,7 +71,7 @@ function LeadTable({ leads, onSelect }) {
     },
     {
       header: "Actions",
-      render: (row) => (
+      render: (_, row) => (
         <button
           onClick={() => onSelect(row)}
           style={{
@@ -97,7 +99,7 @@ function LeadTable({ leads, onSelect }) {
   ];
 
   return (
-    <>
+    <div className="lead-table">
       <h3 style={{ marginTop: 0, marginBottom: "12px", fontSize: "18px" }}>
         Recent Leads
       </h3>
@@ -107,7 +109,7 @@ function LeadTable({ leads, onSelect }) {
         loading={false}
         emptyState="No leads found matching your filters."
       />
-    </>
+    </div>
   );
 }
 
