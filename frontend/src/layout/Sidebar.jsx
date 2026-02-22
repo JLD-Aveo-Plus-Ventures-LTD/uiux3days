@@ -11,7 +11,7 @@
 
 import { useLocation, Link } from "react-router-dom";
 import { HiChartPie, HiOutlineLogout } from "react-icons/hi";
-import { RiMessage2Fill } from "react-icons/ri";
+import { RiMessage2Line } from "react-icons/ri";
 import { GoGraph } from "react-icons/go";
 import jvlLogo from "../assets/images/jvl_logo.svg";
 import "./Sidebar.css";
@@ -30,7 +30,7 @@ const NAV_ITEMS = [
     id: "leads",
     label: "Leads",
     path: "/admin/leads",
-    icon: <RiMessage2Fill />,
+    icon: <RiMessage2Line />,
   },
   {
     id: "reports",
