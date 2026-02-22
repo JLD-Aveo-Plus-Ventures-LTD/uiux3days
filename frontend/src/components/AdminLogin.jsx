@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./AdminLogin.css";
 
 function AdminLogin({ onLogin }) {
   const [password, setPassword] = useState("");
@@ -23,51 +24,36 @@ function AdminLogin({ onLogin }) {
   };
 
   return (
-    <div className="container" style={{ padding: "32px 0" }}>
-      <div
-        className="card"
-        style={{ maxWidth: "480px", margin: "0 auto", padding: "24px" }}
-      >
-        <h2>Admin Login</h2>
-        <p>Enter the admin password to view and manage leads.</p>
+    <section className="admin-login">
+      <div className="admin-login__card">
+        <h1 className="admin-login__title">Admin Login</h1>
+        <p className="admin-login__subtitle">
+          Enter the admin password to view and manage leads.
+        </p>
 
         <form
           onSubmit={handleSubmit}
-          style={{ display: "grid", gap: "12px", marginTop: "16px" }}
+          className="admin-login__form"
         >
-          <div>
-            <label>Password</label>
+          <div className="admin-login__field">
+            <label htmlFor="admin-password">Password</label>
             <input
+              id="admin-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1px solid #cbd5e1",
-              }}
+              placeholder="Enter admin password"
             />
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="admin-login__error">{error}</p>}
 
-          <button
-            type="submit"
-            style={{
-              padding: "10px",
-              background: "#22c55e",
-              border: "none",
-              borderRadius: "6px",
-              color: "#0f172a",
-              fontWeight: 600,
-            }}
-          >
+          <button type="submit" className="admin-login__submit">
             Continue
           </button>
         </form>
       </div>
-    </div>
+    </section>
   );
 }
 

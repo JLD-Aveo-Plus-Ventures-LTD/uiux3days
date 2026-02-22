@@ -1,140 +1,136 @@
 import { useEffect, useState } from "react";
-import { fetchLeads, getStats, updateLead } from "../services/api.js";
-import LeadTable from "./LeadTable.jsx";
-import LeadDetailModal from "./LeadDetailModal.jsx";
+import { ClipLoader } from "react-spinners";
+import StatsCard from "./StatsCard.jsx";
+import { getStats } from "../services/leads.service.js";
+import { STATS_CARD_CONFIG } from "../utils/constants.js";
 
+/**
+ * AdminDashboard - Dashboard stats section
+ * 
+ * Displays summary metrics (5 cards):
+ * - Total Leads
+ * - New This Week
+ * - Contacted
+ * - Qualified
+ * - Converted
+ * 
+ * Uses:
+ * - StatsCard component (reusable, data-driven)
+ * - leads.service.js for API calls
+ * - Constants for stat configuration
+ */
 function AdminDashboard({ adminPassword }) {
-  const [leads, setLeads] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("all"); //just added
-  const [appointmentStatusFilter, setAppointmentStatusFilter] = useState("all");
 
-  const loadData = async () => {
+  /**
+   * Load dashboard statistics
+   */
+  const loadStats = async () => {
+    if (!adminPassword) {
+      setError("Authentication required");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
     try {
-      const [leadRes, statsRes] = await Promise.all([
-        fetchLeads(adminPassword, { limit: 50 }),
-        getStats(adminPassword),
-      ]);
-      setLeads(leadRes.leads);
-      setStats(statsRes);
+      const data = await getStats(adminPassword);
+      setStats(data);
     } catch (err) {
-      setError("Unable to load admin data. Check the password and backend.");
+      setError(err.message || "Failed to load dashboard stats");
+      setStats(null);
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Load stats on mount
+   */
   useEffect(() => {
-    loadData();
+    loadStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleStatusChange = async (leadId, status) => {
-    const updated = await updateLead(adminPassword, leadId, { status });
-    setLeads((prev) => prev.map((l) => (l.id === leadId ? updated.lead : l)));
-    setSelectedLead(updated.lead);
+  /**
+   * Get stat value by key (handles nested properties)
+   */
+  const getStatValue = (stat) => {
+    if (!stats) return "—";
+    const keys = stat.dataKey.split(".");
+    let value = stats;
+    for (const key of keys) {
+      value = value?.[key];
+    }
+    return value ?? "—";
   };
 
-  const handleAppointmentStatusChange = async (leadId, appointment_status) => {
-    const updated = await updateLead(adminPassword, leadId, { appointment_status });
-    setLeads((prev) => prev.map((l) => (l.id === leadId ? updated.lead : l)));
-    setSelectedLead(updated.lead);
-  };
-  // Filter logic
-  const filteredLeads = leads.filter((lead) => {
-    const matchesStatus =
-      statusFilter === "all" ? true : lead.status === statusFilter;
-    const matchesApptStatus =
-      appointmentStatusFilter === "all"
-        ? true
-        : (lead.appointment_status || "unbooked") === appointmentStatusFilter;
-    return matchesStatus && matchesApptStatus;
-  });
+  // Loading state
   if (loading) {
     return (
-      <div className="container" style={{ padding: "32px 0" }}>
-        <p>Loading admin dashboard...</p>
+      <div style={{ padding: "24px", display: "flex", justifyContent: "center" }}>
+        <ClipLoader color="#16A34A" size={34} />
       </div>
     );
   }
 
-  if (error) {
+  // Error state
+  if (error && !stats) {
     return (
-      <div className="container" style={{ padding: "32px 0" }}>
-        <p style={{ color: "red" }}>{error}</p>
+      <div style={{ padding: "24px" }}>
+        <p style={{ color: "#dc2626", fontWeight: "500" }}>{error}</p>
+        <button
+          onClick={loadStats}
+          style={{
+            marginTop: "12px",
+            padding: "8px 16px",
+            backgroundColor: "#16A34A",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Retry
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="container" style={{ padding: "32px 0" }}>
-      <div className="card" style={{ marginBottom: "16px" }}>
-        <h2>Admin Dashboard</h2>
-        {stats && (
-          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-            <div>
-              <strong>Total leads:</strong> {stats.totalLeads}
-            </div>
-            <div>
-              <strong>New this week:</strong> {stats.newThisWeek}
-            </div>
-            <div>
-              <strong>Status breakdown:</strong>{" "}
-              {Object.entries(stats.byStatus || {})
-                .map(([k, v]) => `${k}: ${v}`)
-                .join(" | ")}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="card" style={{ marginBottom: "16px", padding: "12px" }}>
-        <label>
-          <strong>Filter by status:</strong>
-        </label>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          style={{ marginLeft: "8px", padding: "6px" }}
+    <div className="stats-section" style={{ marginBottom: "24px" }}>
+      {/* Error Banner */}
+      {error && (
+        <div
+          style={{
+            marginBottom: "16px",
+            padding: "12px 16px",
+            backgroundColor: "#fee2e2",
+            border: "1px solid #fca5a5",
+            borderRadius: "6px",
+            color: "#991b1b",
+            fontSize: "14px",
+          }}
         >
-          <option value="all">All</option>
-          <option value="new">New</option>
-          <option value="contacted">Contacted</option>
-          <option value="qualified">Qualified</option>
-          <option value="converted">Converted</option>
-          <option value="not_interested">Not Interested</option>
-        </select>
-        <label style={{ marginLeft: "16px" }}>
-          <strong>Filter by appointment:</strong>
-        </label>
-        <select
-          value={appointmentStatusFilter}
-          onChange={(e) => setAppointmentStatusFilter(e.target.value)}
-          style={{ marginLeft: "8px", padding: "6px" }}
-        >
-          <option value="all">All</option>
-          <option value="unbooked">Unbooked</option>
-          <option value="booked">Booked</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </div>
-
-      {/* <LeadTable leads={leads} onSelect={setSelectedLead} /> */}
-      <LeadTable leads={filteredLeads} onSelect={setSelectedLead} />
-
-      {selectedLead && (
-        <LeadDetailModal
-          lead={selectedLead}
-          onClose={() => setSelectedLead(null)}
-          onStatusChange={handleStatusChange}
-          onAppointmentStatusChange={handleAppointmentStatusChange}
-        />
+          {error}
+        </div>
       )}
+
+      {/* Stats Grid */}
+      <div className="stats-grid">
+        {STATS_CARD_CONFIG.map((stat) => (
+          <StatsCard
+            key={stat.id}
+            title={stat.title}
+            value={getStatValue(stat)}
+            color={stat.color}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,230 @@
+/**
+ * LeadsPage.css - Styles for the leads management page
+ * 
+ * Layout:
+ * - Header section with page title
+ * - Filter section with dropdown controls
+ * - Data table
+ * - Entry summary and pagination
+ */
+
+.leads-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Header Section */
+.leads-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 24px;
+}
+
+.leads-page__title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+}
+
+/* Loading State */
+.leads-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.leads-page__table-wrap {
+    position: relative;
+}
+
+.leads-page__table-scroll {
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.lead-table {
+    display: flex;
+    flex-direction: column;
+}
+
+.lead-table .data-table {
+    overflow: hidden;
+}
+
+.lead-table .data-table__scroll {
+    max-height: calc(100vh - 380px);
+    min-height: 320px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.leads-page__table-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(1px);
+    border-radius: 8px;
+    z-index: 5;
+}
+
+/* Error State */
+.leads-page__error {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    color: #991b1b;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.leads-page__retry-btn {
+    padding: 4px 8px;
+    background-color: #991b1b;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.leads-page__retry-btn:hover {
+    background-color: #7f1d1d;
+}
+
+/* Filter Section */
+.leads-page__filters {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    flex-wrap: nowrap;
+}
+
+.leads-page__filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.leads-page__filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+    margin: 0;
+    cursor: pointer;
+}
+
+.leads-page__filter-select {
+    padding: 8px 12px;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    color: #1f2937;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 180px;
+}
+
+.leads-page__filter-select:hover {
+    border-color: #9ca3af;
+}
+
+.leads-page__filter-select:focus {
+    outline: none;
+    border-color: #16A34A;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* Summary Section */
+.leads-page__summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.leads-page__summary-text {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .leads-page {
+        gap: 16px;
+    }
+
+    .leads-page__title {
+        font-size: 24px;
+    }
+
+    .leads-page__header {
+        flex-direction: column;
+        align-items: stretch;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .leads-page__filters {
+        flex-direction: column;
+        align-items: stretch;
+        background-color: #f9fafb;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .leads-page__filter {
+        min-width: unset;
+    }
+
+    .lead-table .data-table__scroll {
+        max-height: calc(100vh - 340px);
+        min-height: 260px;
+    }
+}
+
+@media (max-width: 640px) {
+    .leads-page__title {
+        font-size: 20px;
+    }
+
+    .leads-page__filters {
+        padding: 12px;
+    }
+
+    .leads-page__filter-select {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
