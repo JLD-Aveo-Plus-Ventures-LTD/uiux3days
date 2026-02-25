@@ -1,6 +1,6 @@
 /**
  * Sidebar - Navigation sidebar for admin layout
- * 
+ *
  * Config-driven navigation menu
  * Features:
  * - Collapsible on mobile
@@ -10,7 +10,7 @@
  */
 
 import { useLocation, Link } from "react-router-dom";
-import { HiChartPie, HiOutlineLogout } from "react-icons/hi";
+import { HiChartPie, HiArrowRightOnRectangle } from "react-icons/hi2";
 import { RiMessage2Line } from "react-icons/ri";
 import { GoGraph } from "react-icons/go";
 import jvlLogo from "../assets/images/jvl_logo.svg";
@@ -101,7 +101,9 @@ function Sidebar({ isOpen, onClose, onLogout }) {
             }}
             className="sidebar__nav-item sidebar__nav-item--logout"
           >
-            <span className="sidebar__nav-icon"><HiOutlineLogout /></span>
+            <span className="sidebar__nav-icon">
+              <HiArrowRightOnRectangle />
+            </span>
             <span className="sidebar__nav-label">Logout</span>
           </button>
         </nav>
