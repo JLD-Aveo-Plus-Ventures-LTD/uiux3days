@@ -1,0 +1,105 @@
+.accelerator-classes {
+    width: 100%;
+    padding: 2.5rem 0;
+    background: #f4f5fa;
+}
+
+.accelerator-classes-inner {
+    width: min(1120px, 94%);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.1rem;
+}
+
+.class-item {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 1.6rem;
+    background: #ffffff;
+    border: 1px solid #e3e7f0;
+    border-radius: 18px;
+    padding: 1.35rem;
+}
+
+.class-item.reverse .class-copy {
+    order: 2;
+}
+
+.class-item.reverse .class-visual {
+    order: 1;
+}
+
+.class-copy h3 {
+    font-family: var(--font-secondary);
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    line-height: 1.25;
+    color: #121212;
+}
+
+.class-copy p {
+    margin: 0.75rem 0 1rem;
+    line-height: 1.55;
+    color: #343a45;
+}
+
+.class-copy ul {
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.class-copy li {
+    position: relative;
+    padding-left: 1.15rem;
+    color: #21303b;
+    line-height: 1.45;
+    font-size: 0.95rem;
+}
+
+.class-copy li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #30a634;
+    position: absolute;
+    left: 0;
+    top: 0.47rem;
+}
+
+.class-visual {
+    width: 100%;
+}
+
+.class-visual img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+}
+
+@media (max-width: 1024px) {
+    .class-item,
+    .class-item.reverse {
+        grid-template-columns: 1fr;
+    }
+
+    .class-item.reverse .class-copy,
+    .class-item.reverse .class-visual {
+        order: initial;
+    }
+}
+
+@media (max-width: 768px) {
+    .accelerator-classes {
+        padding: 1.7rem 0;
+    }
+
+    .class-item {
+        padding: 1rem;
+        gap: 1.1rem;
+    }
+}

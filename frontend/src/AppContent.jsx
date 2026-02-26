@@ -12,6 +12,7 @@ import DashboardPage from "./features/dashboard/DashboardPage.jsx";
 import LeadsPage from "./features/leads/LeadsPage.jsx";
 import AdminLayout from "./layout/AdminLayout.jsx";
 import BookingPage from "./components/BookingPage.jsx";
+import RegistrationSuccessPage from "./components/RegistrationSuccessPage.jsx";
 
 /**
  * AppContent - Internal routing component (must be inside Router)
@@ -42,6 +43,7 @@ function AppContent() {
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/booking" element={<BookingPage />} />
+      <Route path="/registration-success" element={<RegistrationSuccessPage />} />
 
       {/* Admin Routes */}
       <Route

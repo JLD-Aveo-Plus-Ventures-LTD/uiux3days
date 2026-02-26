@@ -137,8 +137,8 @@ const BookingForm = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                // Success - redirect to booking page with leadId
-                navigate(`/booking?leadId=${data.lead.id}`);
+                // Success - redirect to registration success page with leadId
+                navigate(`/registration-success?leadId=${data.lead.id}`);
             } else {
                 const errorData = await response.json();
                 const errorMsg = errorData?.errors?.join(", ") || errorData?.message || "Submission failed";
@@ -155,7 +155,7 @@ const BookingForm = () => {
     };
 
     return (
-        <div className="booking-form-container">
+        <section className="booking-form-container" id="booking-form">
             <div className="booking-form-card">
                 <form onSubmit={handleSubmit} className="booking-form">
                     {/* Full Name */}
@@ -312,11 +312,11 @@ const BookingForm = () => {
                         className="submit-button"
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? "Submitting..." : "Continue to Booking"}
+                        {isSubmitting ? "Submitting..." : "Submit Application"}
                     </button>
                 </form>
             </div>
-        </div>
+        </section>
     );
 };
 

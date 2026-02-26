@@ -1,23 +1,16 @@
-/* Header Styles */
 .header {
     width: 100%;
-    background: var(--color-dark-green);
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+    background: #102111;
+    border-bottom: 1px solid rgba(92, 167, 100, 0.25);
 }
 
 .header-container {
-    width: 90%;
-    max-width: 1200px;
+    width: min(1120px, 94%);
     margin: 0 auto;
+    padding: 0.85rem 0;
 }
 
-@media (max-width: 760px) {
-    .header-container {
-        width: 100%;
-        /* max-width: 300px; */
-    }
-    .header-container img {
-        width: 100%;
-    }
+.header-container img {
+    width: min(180px, 52vw);
+    display: block;
 }

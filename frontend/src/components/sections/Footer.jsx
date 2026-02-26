@@ -2,7 +2,6 @@ import "./styles/Footer.css";
 import Logo from "../../assets/images/logo.png";
 import facebook from "../../assets/images/facebook.png";
 import instagram from "../../assets/images/instagram.png";
-import twitter from "../../assets/images/twitter.png";
 import linkedin from "../../assets/images/linkedin.png";
 
 const Footer = () => {
@@ -28,10 +27,10 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#careers">Careers</a>
+                                <a href="#masterclass-tracks">Masterclass Tracks</a>
                             </li>
                             <li>
-                                <a href="#press">Press & Media</a>
+                                <a href="#why-masterclass">Why This Masterclass</a>
                             </li>
                             <li>
                                 <a href="#testimonials">Testimonials</a>
@@ -46,13 +45,13 @@ const Footer = () => {
                                 <a href="https://jldaveoplus.com/blog/">Blog</a>
                             </li>
                             <li>
-                                <a href="#help">Help Center</a>
+                                <a href="#how-it-works">How It Works</a>
                             </li>
                             <li>
-                                <a href="#webinars">Webinars & Events</a>
+                                <a href="#accelerator-series">Accelerator Series</a>
                             </li>
                             <li>
-                                <a href="#courses">Course Materials</a>
+                                <a href="#booking-form">Apply / Booking Form</a>
                             </li>
                         </ul>
                     </div>
@@ -66,13 +65,13 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#support">Technical Support</a>
+                                <a href="#booking-form">Technical Support</a>
                             </li>
                             <li>
-                                <a href="#feedback">Feedback</a>
+                                <a href="#testimonials">Feedback</a>
                             </li>
                             <li>
-                                <a href="#community">Community Forum</a>
+                                <a href="#elevate-skills">Community</a>
                             </li>
                         </ul>
                     </div>

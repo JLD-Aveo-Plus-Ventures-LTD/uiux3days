@@ -1,0 +1,48 @@
+.accelerator-series {
+    width: 100%;
+    margin-top: 2.5rem;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(69, 201, 82, 0.16) 0%, transparent 35%),
+        radial-gradient(circle at 85% 70%, rgba(69, 201, 82, 0.12) 0%, transparent 40%),
+        linear-gradient(170deg, #149c26 0%, #04630e 100%);
+    color: #ffffff;
+}
+
+.accelerator-series-inner {
+    width: min(1120px, 94%);
+    margin: 0 auto;
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.accelerator-series h2 {
+    font-family: var(--font-secondary);
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+    line-height: 1.2;
+}
+
+.accelerator-series p {
+    margin: 1rem auto 1.5rem;
+    width: min(800px, 100%);
+    line-height: 1.6;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.series-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7rem;
+}
+
+.series-tag {
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.52);
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}

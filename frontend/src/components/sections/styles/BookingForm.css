@@ -2,259 +2,153 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem 20px;
-    background: var(--color-gray-light);
-    font-family: var(--font-secondary);
+    padding: 2.6rem 1rem;
+    background: #d8dbe7;
 }
 
 .booking-form-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    padding: 40px;
+    width: min(700px, 96%);
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #d8dce8;
+    box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+    padding: 1.45rem;
 }
 
 .booking-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 1rem;
 }
 
-/* Form Group */
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.4rem;
 }
 
 .form-group label {
-    font-size: 14px;
+    font-size: 0.86rem;
     font-weight: 600;
-    color: #1a1a1a;
-    display: flex;
-    align-items: center;
+    color: #1c1c1c;
 }
 
 .required {
-    color: #e74c3c;
-    margin-left: 4px;
+    color: #c92f2f;
+    margin-left: 3px;
 }
 
-.dark-green-bg {
-    background: var(--color-dark-green);
-    color: var(--color-white);
-}
-
-/* Input Styles */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group select {
     width: 100%;
-    padding: 12px 16px;
-    font-size: 15px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    background: white;
-    color: #333;
-    transition: all 0.3s ease;
+    border: 1px solid #d4d9e3;
+    border-radius: 10px;
+    padding: 0.72rem 0.85rem;
+    font-size: 0.93rem;
     font-family: inherit;
-}
-
-.form-group input::placeholder {
-    color: #999;
+    background: #ffffff;
+    color: #1f2937;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #27853a;
+    box-shadow: 0 0 0 3px rgba(39, 133, 58, 0.12);
 }
 
 .form-group input.error,
 .form-group select.error {
-    border-color: #e74c3c;
+    border-color: #dc2626;
 }
 
-.form-group input.error:focus {
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-}
-
-/* Error Message */
 .error-message {
-    color: #e74c3c;
-    font-size: 13px;
-    margin-top: -4px;
+    color: #c92f2f;
+    font-size: 0.76rem;
 }
 
-/* Mobile Input Group */
 .mobile-input-group {
     display: flex;
-    gap: 12px;
+    gap: 0.65rem;
 }
 
 .country-code-select {
-    flex: 0 0 200px;
-    background: var(--color-dark-green) !important;
-    color: white !important;
-    border: none;
-    padding: 12px 2.8em 12px 16px; /* extra right padding for arrow */
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-
-    /* Remove default arrow */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-
-    /* Custom arrow as background SVG – uses currentColor so it follows text color */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e91e63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
-    background-repeat: no-repeat;
-    background-position: right 16px center; /* adjust position to taste */
-    background-size: 1.1em;
+    flex: 0 0 225px;
+    background: #18331e !important;
+    color: #ffffff !important;
+    border: 0 !important;
+    border-radius: 10px;
 }
 
-.country-code-select:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(45, 52, 54, 0.3);
-}
-
-.mobile-input-group input {
-    flex: 1;
-}
-
-/* Help Text */
 .help-text {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.5;
-    margin: 4px 0 0 0;
+    margin-top: 0.15rem;
+    color: #626f83;
+    font-size: 0.75rem;
+    line-height: 1.4;
 }
 
-/* Select Dropdown */
-.form-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px;
-    cursor: pointer;
-}
-
-/* Submit Button */
-.submit-button {
-    width: 100%;
-    padding: 16px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    background: #2d7e34;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 8px;
-}
-
-.submit-button:hover:not(:disabled) {
-    background: #246629;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(45, 126, 52, 0.3);
-}
-
-.submit-button:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.submit-button:disabled {
-    background: #a8d5ad;
-    cursor: not-allowed;
-}
-
-/* Submit Status */
 .submit-status {
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
+    border-radius: 9px;
+    padding: 0.7rem 0.8rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
 }
 
 .submit-status.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    color: #0f5132;
+    background: #d1f6e1;
+    border: 1px solid #b8ebd2;
 }
 
 .submit-status.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    color: #7f1d1d;
+    background: #ffe2e2;
+    border: 1px solid #ffc9c9;
 }
 
-/* Mobile Responsive */
+.submit-button {
+    border: 0;
+    border-radius: 9px;
+    background: linear-gradient(120deg, #2c9226 0%, #42b338 100%);
+    color: #ffffff;
+    font-size: 0.93rem;
+    font-weight: 700;
+    padding: 0.86rem 1rem;
+    margin-top: 0.3rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(38, 122, 42, 0.28);
+}
+
+.submit-button:disabled {
+    opacity: 0.75;
+}
+
 @media (max-width: 768px) {
     .booking-form-container {
-        padding: 0;
-        background: white;
-        align-items: flex-start;
+        padding: 1.2rem 0;
     }
 
     .booking-form-card {
+        width: 100%;
         max-width: 100%;
-        min-height: 100vh;
         border-radius: 0;
-        box-shadow: none;
-        padding: 24px 16px;
-    }
-
-    .booking-form {
-        gap: 20px;
-    }
-
-    .form-group label {
-        font-size: 13px;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="email"],
-    .form-group input[type="tel"],
-    .form-group select {
-        padding: 11px 14px;
-        font-size: 16px; /* Prevents zoom on iOS */
-    }
-
-    .country-code-select {
-        flex: 0 0 140px;
-        padding: 11px 12px;
-        font-size: 14px;
-    }
-
-    .help-text {
-        font-size: 12px;
-    }
-
-    .submit-button {
-        padding: 14px 20px;
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .booking-form-card {
-        padding: 20px 16px;
+        border-left: 0;
+        border-right: 0;
+        padding: 1.1rem;
     }
 
     .mobile-input-group {
         flex-direction: column;
-        gap: 12px;
     }
 
     .country-code-select {
         flex: 1;
-        width: 100%;
     }
 }
