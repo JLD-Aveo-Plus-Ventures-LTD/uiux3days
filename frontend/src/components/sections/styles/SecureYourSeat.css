@@ -1,47 +1,35 @@
 .secure-seat-container {
-    max-width: 1200px;
-    margin: 4rem auto;
-    padding: 60px 20px;
-    background-color: #ffffff;
+    width: min(1140px, 94%);
+    margin: 2.8rem auto 0;
+    padding: 2rem 0;
 }
 
 .secure-seat-title {
-    font-size: 32px;
-    font-weight: 600;
+    font-size: clamp(1.7rem, 3.2vw, 2.15rem);
+    font-weight: 700;
     font-family: var(--font-secondary);
     text-align: center;
-    color: var(--color-black);
-    margin-bottom: 60px;
-    line-height: 1.2;
+    color: #151515;
+    margin-bottom: 2.3rem;
 }
 
 .steps-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 60px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
 }
 
 .step-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 1rem;
     text-align: center;
-    max-width: 240px;
-    flex: 1;
-    min-width: 200px;
 }
 
 .icon-circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 24px;
-    transition: transform 0.3s ease;
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    margin: 0 auto 1rem;
+    transition: transform 0.2s ease;
 }
 
 .step-card:hover .icon-circle {
@@ -49,81 +37,30 @@
 }
 
 .step-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--color-black);
-    margin-bottom: 12px;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: #202020;
 }
 
 .step-description {
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--color-black);
+    margin-top: 0.55rem;
+    color: #303030;
     line-height: 1.5;
-    max-width: 200px;
+    font-size: 0.95rem;
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
     .secure-seat-container {
-        padding: 0 20px;
-    }
-
-    .secure-seat-title {
-        font-size: 2.25rem;
-        margin-bottom: 40px;
+        margin-top: 2rem;
     }
 
     .steps-container {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        gap: 1.35rem;
     }
 
     .step-card {
-        max-width: 100%;
-        width: 100%;
-    }
-
-    .icon-circle {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 20px;
-    }
-
-    .step-title {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .step-description {
-        font-size: 20px;
-        max-width: 280px;
-    }
-}
-
-@media (max-width: 480px) {
-    .secure-seat-container {
-        padding: 30px 16px;
-    }
-
-    .secure-seat-title {
-        margin-bottom: 32px;
-    }
-
-    .icon-circle {
-        width: 90px;
-        height: 90px;
-    }
-}
-
-/* Desktop - Large Screens */
-@media (min-width: 1024px) {
-    .steps-container {
-        gap: 80px;
-    }
-
-    .step-card {
-        max-width: 260px;
+        padding: 0.75rem 0;
     }
 }

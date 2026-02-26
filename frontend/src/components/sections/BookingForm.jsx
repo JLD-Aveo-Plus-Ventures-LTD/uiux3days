@@ -155,7 +155,7 @@ const BookingForm = () => {
     };
 
     return (
-        <div className="booking-form-container">
+        <section className="booking-form-container" id="booking-form">
             <div className="booking-form-card">
                 <form onSubmit={handleSubmit} className="booking-form">
                     {/* Full Name */}
@@ -316,7 +316,7 @@ const BookingForm = () => {
                     </button>
                 </form>
             </div>
-        </div>
+        </section>
     );
 };
 

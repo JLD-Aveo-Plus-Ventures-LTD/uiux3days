@@ -102,8 +102,8 @@ function SelectInterviewSlot({ leadId }) {
             setSlots((prev) =>
                 Array.isArray(prev)
                     ? prev.filter(
-                          (slot) => slot.start_utc !== selectedSlot.start_utc,
-                      )
+                        (slot) => slot.start_utc !== selectedSlot.start_utc,
+                    )
                     : [],
             );
 
@@ -133,20 +133,20 @@ function SelectInterviewSlot({ leadId }) {
     const formatLocalTime = (isoString, withDate = false) => {
         const options = withDate
             ? {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  timeZone: detectClientTimezone,
-                  timeZoneName: "short",
-              }
+                hour: "2-digit",
+                minute: "2-digit",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                timeZone: detectClientTimezone,
+                timeZoneName: "short",
+            }
             : {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  timeZone: detectClientTimezone,
-                  timeZoneName: "short",
-              };
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: detectClientTimezone,
+                timeZoneName: "short",
+            };
 
         return new Date(isoString).toLocaleString([], options);
     };
