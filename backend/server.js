@@ -15,12 +15,9 @@ const PORT = process.env.PORT || 4000;
 // Update this origin to match your frontend URL.
 app.use(
   cors({
-    origin: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*",
   }),
 );
-app.options("*", cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api", leadRoutes);
