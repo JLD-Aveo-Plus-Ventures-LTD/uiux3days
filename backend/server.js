@@ -1,4 +1,3 @@
-console.log("🔥 JALS SERVER VERSION 2 - stats route should exist");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
