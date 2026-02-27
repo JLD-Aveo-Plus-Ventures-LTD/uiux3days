@@ -13,6 +13,7 @@ import {
     fetchLead as apiFetchLead,
     updateLead as apiUpdateLead,
     getStats as apiGetStats,
+    getLeadsSeries as apiGetLeadsSeries,
     fetchSlots as apiFetchSlots,
     bookLeadAppointment as apiBookLeadAppointment,
     createLead as apiCreateLead,
@@ -200,6 +201,36 @@ export async function getStats(adminPassword) {
     } catch (error) {
         throwServiceError(
             getErrorMessage(error, ERROR_MESSAGES.LOAD_STATS),
+            error
+        );
+    }
+}
+
+/**
+ * Get leads series for dashboard chart (admin only)
+ * @param {string} adminPassword
+ * @param {object} params - {period: "week"|"month"|"year", year?, month?, tz?}
+ * @returns {Promise<{period, timezone, rangeStart, rangeEnd, labels: string[], values: number[], total: number}>}
+ */
+export async function getLeadsSeries(adminPassword, params = {}) {
+    if (!adminPassword) {
+        throwServiceError(ERROR_MESSAGES.UNAUTHORIZED);
+    }
+
+    try {
+        const response = await apiGetLeadsSeries(adminPassword, params);
+        return {
+            period: response.period || "week",
+            timezone: response.timezone || "UTC",
+            rangeStart: response.rangeStart || null,
+            rangeEnd: response.rangeEnd || null,
+            labels: Array.isArray(response.labels) ? response.labels : [],
+            values: Array.isArray(response.values) ? response.values : [],
+            total: Number(response.total) || 0,
+        };
+    } catch (error) {
+        throwServiceError(
+            getErrorMessage(error, "Failed to load leads chart data"),
             error
         );
     }

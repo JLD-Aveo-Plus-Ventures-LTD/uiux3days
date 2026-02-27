@@ -5,6 +5,7 @@ const {
   getLeadById,
   updateLead,
   getSummary,
+  getLeadsSeries,
   getAvailableSlots,
   bookAppointment,
 } = require("../controllers/leadController");
@@ -39,5 +40,9 @@ router.patch("/leads/:id", adminAuth, updateLead);
 // ADMIN: summary stats
 // GET /api/stats/summary
 router.get("/stats/summary", adminAuth, getSummary);
+
+// ADMIN: leads series chart stats
+// GET /api/stats/leads-series?period=week|month|year&year=YYYY&month=1-12&tz=UTC
+router.get("/stats/leads-series", adminAuth, getLeadsSeries);
 
 module.exports = router;

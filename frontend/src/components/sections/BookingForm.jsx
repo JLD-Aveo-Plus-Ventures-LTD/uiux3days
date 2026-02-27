@@ -5,14 +5,13 @@ import { normalizePhoneNumber, loadCountries, DEFAULT_COUNTRY } from "../../util
 import "./styles/BookingForm.css";
 
 const designStruggles = [
-    "My designs look amateur",
-    "Lack of creativity",
-    "Poor color choices",
-    "Typography issues",
-    "Layout problems",
-    "Others",
-];
-
+    "I don't know which tech skill is right for me",
+    "I start learning but get confused and overwhelmed",
+    "Too much theory and not enough practical guidance",
+    "I'm scared it might not lead to a real job",
+    "I struggle to stay consistent and finish what I start",
+    "I can't afford to waste money on the wrong courses",
+]
 const interviewMethods = [
     "Normal Phone Call",
     "Video Call",
@@ -58,7 +57,7 @@ const BookingForm = () => {
         let mounted = true;
         loadCountries().then((list) => {
             if (mounted) setCountries(list || []);
-        }).catch(() => {});
+        }).catch(() => { });
         return () => { mounted = false; };
     }, []);
 
@@ -214,10 +213,10 @@ const BookingForm = () => {
                             >
                                 {countries.length > 0
                                     ? countries.map((item) => (
-                                          <option key={item.code} value={item.code}>
-                                              {item.name} ({item.dialCode})
-                                          </option>
-                                      ))
+                                        <option key={item.code} value={item.code}>
+                                            {item.name} ({item.dialCode})
+                                        </option>
+                                    ))
                                     : null}
                             </select>
                             <input
@@ -264,7 +263,7 @@ const BookingForm = () => {
                     {/* Design Struggle */}
                     <div className="form-group">
                         <label htmlFor="designStruggle">
-                            What is your biggest design struggle?
+                            What's Your Biggest Struggle in Learning a Digital Skill?
                         </label>
                         <select
                             id="designStruggle"
