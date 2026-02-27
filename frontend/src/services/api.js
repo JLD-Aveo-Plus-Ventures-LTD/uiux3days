@@ -83,6 +83,21 @@ export async function getStats(adminPassword) {
   return handleResponse(res);
 }
 
+// ADMIN – leads chart series (week/month/year)
+export async function getLeadsSeries(adminPassword, params = {}) {
+  const url = new URL(`${API_BASE_URL}/stats/leads-series`);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  const res = await fetch(url, {
+    headers: { "x-admin-password": adminPassword },
+  });
+  return handleResponse(res);
+}
+
 // NEW: fetch available slots (PUBLIC, used by BookingPage)
 export async function fetchSlots(date) {
   const params = new URLSearchParams();

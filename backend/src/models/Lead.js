@@ -8,7 +8,7 @@ const Lead = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-  email: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

@@ -14,16 +14,10 @@ const testimonials = [
         quote: "“This UI/UX class has been an insightful and rewarding journey! From understanding user experience fundamentals to working on my first portfolio project, I’ve learned so much. Initially, I was unsure about my direction in UI/UX, but practical exercises, like redesigning the Spotify app, have helped me improve. The process has had challenges, like mastering new tools, but the learning experience has been incredible. I’m excited to refine my skills and grow further!”",
     },
     {
-        name: "Peggy Onyinyechi Otto",
+        name: "Hillz",
         // role: "Career Switcher",
         rating: 5,
         quote: "“I had an incredible experience with the UI/UX design course at JLD Aveo Institute. As a beginner, I gained hands-on knowledge in wireframing, prototyping, and using tools like Figma. The real-world projects boosted my confidence”",
-    },
-    {
-        name: "Odeshile Rukayat Omobolanle",
-        // role: "Frontend Learner",
-        rating: 5,
-        quote: "“This UI/UX class has been an insightful and rewarding journey! From understanding user experience fundamentals to working on my first portfolio project, I’ve learned so much. Initially, I was unsure about my direction in UI/UX, but practical exercises, like redesigning the Spotify app, have helped me improve. The process has had challenges, like mastering new tools, but the learning experience has been incredible. I’m excited to refine my skills and grow further!”",
     },
 ];
 

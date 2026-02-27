@@ -164,7 +164,7 @@ async function getSummary(req, res) {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
     const newThisWeek = await Lead.count({
-      where: { created_at: { [Op.gte]: oneWeekAgo } },
+      where: { createdAt: { [Op.gte]: oneWeekAgo } },
     });
 
     const statuses = [
@@ -185,6 +185,121 @@ async function getSummary(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Failed to fetch stats" });
+  }
+}
+
+/**
+ * Leads series stats for dashboard chart
+ * Route: GET /api/stats/leads-series?period=week|month|year&year=YYYY&month=1-12&tz=UTC
+ */
+async function getLeadsSeries(req, res) {
+  try {
+    const allowedPeriods = ["week", "month", "year"];
+    const requestedPeriod = req.query.period;
+    if (requestedPeriod && !allowedPeriods.includes(requestedPeriod)) {
+      return res.status(400).json({
+        message: "Invalid period. Use one of: week, month, year",
+      });
+    }
+    const period = requestedPeriod || "week";
+
+    const requestedZone = req.query.tz || "UTC";
+    const zone = DateTime.now().setZone(requestedZone).isValid
+      ? requestedZone
+      : "UTC";
+
+    const now = DateTime.now().setZone(zone);
+
+    let rangeStart = now.startOf("day");
+    let rangeEnd = now.endOf("day");
+    let labels = [];
+    let values = [];
+
+    if (period === "week") {
+      const startOfWeek = now
+        .startOf("day")
+        .minus({ days: now.weekday - 1 }); // Monday
+      rangeStart = startOfWeek;
+      rangeEnd = startOfWeek.plus({ days: 6 }).endOf("day");
+      labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      values = new Array(7).fill(0);
+    } else if (period === "month") {
+      const year = Number(req.query.year) || now.year;
+      const month = Number(req.query.month) || now.month;
+      const targetMonth = DateTime.fromObject(
+        { year, month, day: 1 },
+        { zone },
+      );
+
+      if (!targetMonth.isValid) {
+        return res
+          .status(400)
+          .json({ message: "Invalid year or month for period=month" });
+      }
+
+      rangeStart = targetMonth.startOf("month");
+      rangeEnd = targetMonth.endOf("month");
+      const totalDays = targetMonth.daysInMonth;
+      labels = Array.from({ length: totalDays }, (_, idx) => String(idx + 1));
+      values = new Array(totalDays).fill(0);
+    } else {
+      const year = Number(req.query.year) || now.year;
+      const targetYear = DateTime.fromObject({ year, month: 1, day: 1 }, { zone });
+
+      if (!targetYear.isValid) {
+        return res.status(400).json({ message: "Invalid year for period=year" });
+      }
+
+      rangeStart = targetYear.startOf("year");
+      rangeEnd = targetYear.endOf("year");
+      labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      values = new Array(12).fill(0);
+    }
+
+    const rangeStartUtc = rangeStart.toUTC();
+    const rangeEndUtc = rangeEnd.toUTC();
+
+    const leads = await Lead.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [rangeStartUtc.toJSDate(), rangeEndUtc.toJSDate()],
+        },
+      },
+      attributes: ["createdAt"],
+    });
+
+    for (const lead of leads) {
+      if (!lead.createdAt) continue;
+      const leadDate = DateTime.fromJSDate(lead.createdAt, {
+        zone: "utc",
+      }).setZone(zone);
+
+      if (period === "week") {
+        const index = leadDate.weekday - 1; // Mon=1
+        if (index >= 0 && index < values.length) values[index] += 1;
+      } else if (period === "month") {
+        const index = leadDate.day - 1;
+        if (index >= 0 && index < values.length) values[index] += 1;
+      } else {
+        const index = leadDate.month - 1;
+        if (index >= 0 && index < values.length) values[index] += 1;
+      }
+    }
+
+    const total = values.reduce((sum, value) => sum + value, 0);
+
+    return res.json({
+      period,
+      timezone: zone,
+      rangeStart: rangeStartUtc.toISO(),
+      rangeEnd: rangeEndUtc.toISO(),
+      labels,
+      values,
+      total,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to fetch leads series" });
   }
 }
 
@@ -451,6 +566,7 @@ module.exports = {
   getLeadById,
   updateLead,
   getSummary,
+  getLeadsSeries,
   getAvailableSlots,
   bookAppointment,
 };

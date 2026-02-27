@@ -271,6 +271,7 @@ export const DEFAULT_TIMEZONE = "Europe/London";
 export const API_ENDPOINTS = {
     LEADS: "/leads",
     LEADS_STATS: "/stats/summary",
+    LEADS_SERIES: "/stats/leads-series",
     LEADS_SLOTS: "/leads/slots",
 };
 
