@@ -163,6 +163,19 @@ async function sendReminderEmail(lead, { label, contactMethod = "Call" }) {
   await safeSendMail(message);
 }
 
+async function sendLeadRegistrationEmail(lead) {
+  if (!lead?.email) return;
+
+  const message = {
+    from: buildFromAddress(),
+    to: lead.email,
+    subject: "Welcome to JLD Aveo Institute!",
+    text: `Hi ${lead.full_name},\n\nThank you for registering with us! Our team will review your request and get back to you shortly.\n\nBest regards,\nThe JLD Aveo Institute Team`,
+  };
+
+  await safeSendMail(message);
+}
+
 module.exports = {
   transporter,
   sendAdminNotification,
@@ -170,6 +183,7 @@ module.exports = {
   sendBookingConfirmation,
   sendAdminBookingNotification,
   sendReminderEmail,
+  sendLeadRegistrationEmail, // Added new email function
   formatAppointmentDate,
   FROM_NAME,
 };

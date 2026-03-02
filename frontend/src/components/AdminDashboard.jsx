@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import StatsCard from "./StatsCard.jsx";
 import { getStats } from "../services/leads.service.js";
+import { useAuthedApi } from "../hooks/useAuthedApi.js";
 import { STATS_CARD_CONFIG } from "../utils/constants.js";
 
 /**
@@ -23,6 +24,7 @@ function AdminDashboard({ adminPassword }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const withAuthCheck = useAuthedApi();
 
   /**
    * Load dashboard statistics
@@ -38,8 +40,10 @@ function AdminDashboard({ adminPassword }) {
     setError("");
 
     try {
-      const data = await getStats(adminPassword);
-      setStats(data);
+      await withAuthCheck(async () => {
+        const data = await getStats(adminPassword);
+        setStats(data);
+      });
     } catch (err) {
       setError(err.message || "Failed to load dashboard stats");
       setStats(null);

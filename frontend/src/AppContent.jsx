@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Routes,
   Route,
   Navigate,
   useNavigate,
 } from "react-router-dom";
+import { useAuth } from "./context/AuthContext.jsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 
 import LandingPage from "./components/LandingPage.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
@@ -15,26 +17,20 @@ import BookingPage from "./components/BookingPage.jsx";
 import RegistrationSuccessPage from "./components/RegistrationSuccessPage.jsx";
 
 /**
- * AppContent - Internal routing component (must be inside Router)
+ * AppContent - Internal routing component (must be inside Router and AuthProvider)
  * 
  * Handles:
- * - Authentication state
  * - Route logic
  * - Layout selection for admin routes
+ * - Protected route wrapping
+ * - Auth state via context
  */
 function AppContent() {
-  const [adminPassword, setAdminPassword] = useState("");
-  const [isAuthed, setIsAuthed] = useState(false);
+  const { adminPassword, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (password) => {
-    setAdminPassword(password);
-    setIsAuthed(true);
-  };
-
   const handleLogout = () => {
-    setAdminPassword("");
-    setIsAuthed(false);
+    logout();
     navigate("/admin/login", { replace: true });
   };
 
@@ -45,36 +41,32 @@ function AppContent() {
       <Route path="/booking" element={<BookingPage />} />
       <Route path="/registration-success" element={<RegistrationSuccessPage />} />
 
-      {/* Admin Routes */}
+      {/* Admin Login Route */}
       <Route
         path="/admin/login"
-        element={<AdminLogin onLogin={handleLogin} />}
+        element={<AdminLogin />}
       />
 
       {/* Protected Admin Routes with Layout */}
       <Route
         path="/admin/dashboard"
         element={
-          isAuthed ? (
+          <ProtectedRoute>
             <AdminLayout onLogout={handleLogout} adminPassword={adminPassword}>
               <DashboardPage adminPassword={adminPassword} />
             </AdminLayout>
-          ) : (
-            <Navigate to="/admin/login" replace />
-          )
+          </ProtectedRoute>
         }
       />
 
       <Route
         path="/admin/leads"
         element={
-          isAuthed ? (
+          <ProtectedRoute>
             <AdminLayout onLogout={handleLogout} adminPassword={adminPassword}>
               <LeadsPage adminPassword={adminPassword} />
             </AdminLayout>
-          ) : (
-            <Navigate to="/admin/login" replace />
-          )
+          </ProtectedRoute>
         }
       />
 

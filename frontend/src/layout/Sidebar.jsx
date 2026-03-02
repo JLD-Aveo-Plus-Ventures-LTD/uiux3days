@@ -32,13 +32,13 @@ const NAV_ITEMS = [
     path: "/admin/leads",
     icon: <RiMessage2Line />,
   },
-  {
-    id: "reports",
-    label: "Reports",
-    path: "#", // Future feature
-    icon: <GoGraph />,
-    disabled: true,
-  },
+  // {
+  //   id: "reports",
+  //   label: "Reports",
+  //   path: "#", // Future feature
+  //   icon: <GoGraph />,
+  //   disabled: true,
+  // },
 ];
 
 function Sidebar({ isOpen, onClose, onLogout }) {

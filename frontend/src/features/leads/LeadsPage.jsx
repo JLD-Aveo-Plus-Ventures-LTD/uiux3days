@@ -10,13 +10,14 @@
  */
 
 import { useState, useCallback } from "react";
-import { IoFilterSharp } from "react-icons/io5";
+import { IoFilterSharp, IoCalendarOutline } from "react-icons/io5";
 import { ClipLoader } from "react-spinners";
 import useLeadsPaginated from "../../hooks/useLeadsPaginated.js";
 import { PaginationControls } from "../../components/index.js";
 import LeadTable from "./LeadTable.jsx";
 import LeadDetailModal from "./LeadDetailModal.jsx";
 import { LEAD_STATUSES, APPOINTMENT_STATUSES } from "../../utils/constants.js";
+import { API_BASE_URL } from "../../services/api.js";
 import "../../components/Pagination/Pagination.css";
 import "./LeadsPage.css";
 
@@ -26,6 +27,8 @@ function LeadsPage({ adminPassword }) {
     const [filters, setFilters] = useState({
         status: "",
         appointmentStatus: "",
+        startDate: "",
+        endDate: "",
     });
     const [selectedLead, setSelectedLead] = useState(null);
 
@@ -47,11 +50,21 @@ function LeadsPage({ adminPassword }) {
 
     const handleFilterChange = useCallback((filterKey, value) => {
         setCurrentPage(1); // Reset to first page on filter change
+        
+        // Validate date range: endDate cannot be before startDate
+        if (filterKey === "endDate" && filters.startDate && value < filters.startDate) {
+            return; // Silently ignore invalid date range
+        }
+        
+        if (filterKey === "startDate" && filters.endDate && value > filters.endDate) {
+            return; // Silently ignore invalid date range
+        }
+        
         setFilters((prev) => ({
             ...prev,
             [filterKey]: value,
         }));
-    }, []);
+    }, [filters.startDate, filters.endDate]);
 
     const handleSelectLead = (lead) => {
         setSelectedLead(lead);
@@ -64,6 +77,44 @@ function LeadsPage({ adminPassword }) {
     const handleLeadUpdate = () => {
         setSelectedLead(null);
         refetch();
+    };
+
+    const handleExport = async (format) => {
+        try {
+            const params = new URLSearchParams();
+            if (filters.status) params.append('status', filters.status);
+            if (filters.appointmentStatus) params.append('appointment_status', filters.appointmentStatus);
+            if (filters.startDate) params.append('start_date', filters.startDate);
+            if (filters.endDate) params.append('end_date', filters.endDate);
+            
+            const response = await fetch(`${API_BASE_URL}/leads/export/${format}?${params.toString()}`, {
+                headers: {
+                    'x-admin-password': adminPassword,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Export failed');
+            }
+
+            // Get the file name from content-disposition header
+            const contentDisposition = response.headers.get('content-disposition');
+            const fileName = contentDisposition?.split('filename="')[1]?.split('"')[0] || `leads.${format}`;
+
+            // Create blob and download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error(`Export failed: ${error.message}`);
+            alert(`Failed to export as ${format.toUpperCase()}. Please try again.`);
+        }
     };
 
     // Calculate entry summary
@@ -83,11 +134,11 @@ function LeadsPage({ adminPassword }) {
 
     return (
         <div className="leads-page">
-            {/* Page Header & Filters (Same Line) */}
+            {/* Page Header & Filters */}
             <div className="leads-page__header">
                 <h1 className="leads-page__title">Recent Leads</h1>
 
-                {/* Filter Bar */}
+                {/* Filter Bar - Status, Appointment, & Date Range */}
                 <div className="leads-page__filters">
                     <div className="leads-page__filter">
                         <label htmlFor="filter-status" className="leads-page__filter-label">
@@ -126,7 +177,57 @@ function LeadsPage({ adminPassword }) {
                             ))}
                         </select>
                     </div>
+
+                    <div className="leads-page__date-filter">
+                        <label htmlFor="filter-start-date" className="leads-page__date-filter-label">
+                            <IoCalendarOutline /> From
+                        </label>
+                        <input
+                            id="filter-start-date"
+                            type="date"
+                            value={filters.startDate}
+                            onChange={(e) => handleFilterChange("startDate", e.target.value)}
+                            max={filters.endDate}
+                            className="leads-page__date-input"
+                        />
+                    </div>
+
+                    <div className="leads-page__date-filter">
+                        <label htmlFor="filter-end-date" className="leads-page__date-filter-label">
+                            <IoCalendarOutline /> To
+                        </label>
+                        <input
+                            id="filter-end-date"
+                            type="date"
+                            value={filters.endDate}
+                            onChange={(e) => handleFilterChange("endDate", e.target.value)}
+                            min={filters.startDate}
+                            className="leads-page__date-input"
+                        />
+                    </div>
                 </div>
+            </div>
+
+            {/* Export Buttons */}
+            <div className="leads-page__export">
+                <button
+                    onClick={() => handleExport('csv')}
+                    className="leads-page__export-btn leads-page__export-btn--csv"
+                >
+                    📥 Export as CSV
+                </button>
+                <button
+                    onClick={() => handleExport('xlsx')}
+                    className="leads-page__export-btn leads-page__export-btn--xlsx"
+                >
+                    📊 Export as XLSX
+                </button>
+                <button
+                    onClick={() => handleExport('pdf')}
+                    className="leads-page__export-btn leads-page__export-btn--pdf"
+                >
+                    📄 Export as PDF
+                </button>
             </div>
 
             {/* Error State */}

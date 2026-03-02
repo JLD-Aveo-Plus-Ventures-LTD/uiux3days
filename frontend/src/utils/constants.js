@@ -13,7 +13,13 @@
 // LEAD STATUS CONFIGURATION
 // ============================================================================
 
-export const LEAD_STATUSES = ["new", "contacted", "qualified", "not_interested", "converted"];
+export const LEAD_STATUSES = [
+    { value: "new", label: "New" },
+    { value: "contacted", label: "Contacted" },
+    { value: "qualified", label: "Qualified" },
+    { value: "not_interested", label: "Not Interested" },
+    { value: "converted", label: "Converted" },
+];
 
 export const LEAD_STATUS_LABELS = {
     new: "New",
@@ -28,11 +34,11 @@ export const LEAD_STATUS_LABELS = {
 // ============================================================================
 
 export const APPOINTMENT_STATUSES = [
-    "unbooked",
-    "booked",
-    "confirmed",
-    "completed",
-    "cancelled",
+    { value: "unbooked", label: "Unbooked" },
+    { value: "booked", label: "Booked" },
+    { value: "confirmed", label: "Confirmed" },
+    { value: "completed", label: "Completed" },
+    { value: "cancelled", label: "Cancelled" },
 ];
 
 export const APPOINTMENT_STATUS_LABELS = {

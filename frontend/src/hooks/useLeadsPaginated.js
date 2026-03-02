@@ -50,20 +50,28 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { getLeads, filterLeads } from "../services/leads.service.js";
+import { useAuthedApi } from "./useAuthedApi.js";
 
-function useLeadsPaginated(adminPassword, initialPage = 1, itemsPerPage = 20) {
+function useLeadsPaginated(adminPassword, initialPage = 1, itemsPerPage = 20, passedFilters = {}) {
   const [leads, setLeads] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(passedFilters);
+  const withAuthCheck = useAuthedApi();
 
   // Sync hook's currentPage with prop changes (when parent updates its currentPage)
   useEffect(() => {
     setCurrentPage(initialPage);
   }, [initialPage]);
+
+  // Sync filters when parent passes new filters
+  useEffect(() => {
+    setFilters(passedFilters);
+  }, [passedFilters]);
 
   // Derived values
   const totalPages = Math.ceil(total / itemsPerPage);
@@ -83,32 +91,34 @@ function useLeadsPaginated(adminPassword, initialPage = 1, itemsPerPage = 20) {
     setError(null);
 
     try {
-      let response;
+      await withAuthCheck(async () => {
+        let response;
 
-      // Use filterLeads if filters are applied, otherwise use getLeads for efficiency
-      if (Object.keys(filters).length > 0) {
-        response = await filterLeads(
-          adminPassword,
-          filters,
-          currentPage,
-          itemsPerPage
-        );
-      } else {
-        response = await getLeads(adminPassword, {
-          page: currentPage,
-          limit: itemsPerPage,
-        });
-      }
+        // Use filterLeads if filters are applied, otherwise use getLeads for efficiency
+        if (Object.keys(filters).length > 0) {
+          response = await filterLeads(
+            adminPassword,
+            filters,
+            currentPage,
+            itemsPerPage
+          );
+        } else {
+          response = await getLeads(adminPassword, {
+            page: currentPage,
+            limit: itemsPerPage,
+          });
+        }
 
-      setLeads(response.leads || []);
-      setTotal(response.total || 0);
+        setLeads(response.leads || []);
+        setTotal(response.total || 0);
+      });
     } catch (err) {
       setError(err.message || "Failed to load leads");
       setLeads([]);
     } finally {
       setLoading(false);
     }
-  }, [adminPassword, currentPage, itemsPerPage, filters]);
+  }, [adminPassword, currentPage, itemsPerPage, filters, withAuthCheck]);
 
   /**
    * Fetch data whenever page, itemsPerPage, or filters change

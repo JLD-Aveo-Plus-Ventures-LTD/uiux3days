@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AdminDashboard from "../../components/AdminDashboard.jsx";
 import { getLeadsSeries } from "../../services/leads.service.js";
+import { useAuthedApi } from "../../hooks/useAuthedApi.js";
 import LeadsChart from "./components/LeadsChart.jsx";
 import "./styles/dashboard.css";
 
@@ -18,6 +19,7 @@ function DashboardPage({ adminPassword }) {
   });
   const [chartLoading, setChartLoading] = useState(true);
   const [chartError, setChartError] = useState("");
+  const withAuthCheck = useAuthedApi();
 
   useEffect(() => {
     const loadSeries = async () => {
@@ -31,13 +33,15 @@ function DashboardPage({ adminPassword }) {
       setChartError("");
 
       try {
-        const response = await getLeadsSeries(adminPassword, {
-          period,
-          tz: "UTC",
-        });
-        setSeries({
-          labels: response.labels || [],
-          values: response.values || [],
+        await withAuthCheck(async () => {
+          const response = await getLeadsSeries(adminPassword, {
+            period,
+            tz: "UTC",
+          });
+          setSeries({
+            labels: response.labels || [],
+            values: response.values || [],
+          });
         });
       } catch (error) {
         setChartError(error.message || "Failed to load leads chart data");
@@ -47,7 +51,7 @@ function DashboardPage({ adminPassword }) {
     };
 
     loadSeries();
-  }, [adminPassword, period]);
+  }, [adminPassword, period, withAuthCheck]);
 
   const chartData = useMemo(
     () => ({
