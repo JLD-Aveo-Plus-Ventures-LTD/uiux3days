@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 import LandingPage from "./components/LandingPage.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
@@ -16,7 +17,9 @@ import AppContent from "./AppContent.jsx";
 function App() {
   return (
     <Router>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }

@@ -1,26 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 import "./AdminLogin.css";
 
-function AdminLogin({ onLogin }) {
+function AdminLogin() {
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
+  const [localError, setLocalError] = useState("");
   const navigate = useNavigate();
+  const { isAuthed, login, loading, error, clearError } = useAuth();
 
-  const handleSubmit = (e) => {
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (isAuthed) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAuthed, navigate]);
+
+  // Clear context error when component unmounts
+  useEffect(() => {
+    return () => clearError();
+  }, [clearError]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLocalError("");
 
     if (!password) {
-      setError("Please enter the admin password.");
+      setLocalError("Please enter the admin password.");
       return;
     }
 
-    // Call parent to set password + mark admin authenticated
-    onLogin(password);
+    // Call context login function
+    const success = await login(password);
+    
+    // Clear password field after submission (success or failure)
+    setPassword("");
 
-    // Redirect to dashboard
-    navigate("/admin/dashboard");
+    if (success) {
+      // Navigate to dashboard on successful login
+      navigate("/admin/dashboard", { replace: true });
+    }
+    // Error is handled by context and displayed below
   };
 
   return (
@@ -43,13 +63,20 @@ function AdminLogin({ onLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter admin password"
+              disabled={loading}
             />
           </div>
 
-          {error && <p className="admin-login__error">{error}</p>}
+          {(localError || error) && (
+            <p className="admin-login__error">{localError || error}</p>
+          )}
 
-          <button type="submit" className="admin-login__submit">
-            Continue
+          <button 
+            type="submit" 
+            className="admin-login__submit"
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Continue"}
           </button>
         </form>
       </div>

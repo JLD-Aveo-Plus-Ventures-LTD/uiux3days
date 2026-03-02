@@ -392,22 +392,27 @@ export async function filterLeads(adminPassword, filters = {}, page = 1, limit =
             queryOptions.status = filters.status;
         }
 
+        if (filters.appointmentStatus && filters.appointmentStatus !== "all") {
+            queryOptions.appointment_status = filters.appointmentStatus;
+        }
+
         if (filters.search) {
             queryOptions.search = filters.search;
         }
 
-        const response = await apiFetchLeads(adminPassword, queryOptions);
-
-        // Client-side filtering for appointment status (API doesn't support it yet)
-        let filteredLeads = response.leads || [];
-        if (filters.appointmentStatus && filters.appointmentStatus !== "all") {
-            filteredLeads = filteredLeads.filter(
-                (lead) => (lead.appointment_status || "unbooked") === filters.appointmentStatus
-            );
+        // Add date range filters
+        if (filters.startDate) {
+            queryOptions.start_date = filters.startDate;
         }
 
+        if (filters.endDate) {
+            queryOptions.end_date = filters.endDate;
+        }
+
+        const response = await apiFetchLeads(adminPassword, queryOptions);
+
         return {
-            leads: filteredLeads,
+            leads: response.leads || [],
             total: response.total || 0,
             page: response.page || 1,
             limit: response.limit || 20,

@@ -8,6 +8,9 @@ const {
   getLeadsSeries,
   getAvailableSlots,
   bookAppointment,
+  exportLeadsCsv,
+  exportLeadsXlsx,
+  exportLeadsPdf,
 } = require("../controllers/leadController");
 const adminAuth = require("../middleware/auth");
 
@@ -44,5 +47,17 @@ router.get("/stats/summary", adminAuth, getSummary);
 // ADMIN: leads series chart stats
 // GET /api/stats/leads-series?period=week|month|year&year=YYYY&month=1-12&tz=UTC
 router.get("/stats/leads-series", adminAuth, getLeadsSeries);
+
+// ADMIN: export leads as CSV
+// GET /api/leads/export/csv?status=&appointment_status=&search=
+router.get("/leads/export/csv", adminAuth, exportLeadsCsv);
+
+// ADMIN: export leads as XLSX
+// GET /api/leads/export/xlsx?status=&appointment_status=&search=
+router.get("/leads/export/xlsx", adminAuth, exportLeadsXlsx);
+
+// ADMIN: export leads as PDF with summary
+// GET /api/leads/export/pdf?status=&appointment_status=&search=
+router.get("/leads/export/pdf", adminAuth, exportLeadsPdf);
 
 module.exports = router;

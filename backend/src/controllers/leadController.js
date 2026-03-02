@@ -6,8 +6,12 @@ const {
   sendLeadConfirmation,
   sendBookingConfirmation,
   sendAdminBookingNotification,
+  sendLeadRegistrationEmail,
 } = require("../config/mail");
-const { sendBookingConfirmationSms } = require("../config/sms");
+const {
+  sendBookingConfirmationSms,
+  sendLeadRegistrationSms,
+} = require("../config/sms");
 const { validateLeadPayload } = require("../utils/validation");
 const { sequelize } = require("../config/db");
 const { normalizePhoneNumber, DEFAULT_COUNTRY } = require("../utils/phone");
@@ -44,12 +48,17 @@ async function createLead(req, res) {
   try {
     const lead = await Lead.create(req.body);
 
-    // Notify admin + optional autoresponder
+    // Notify admin
     sendAdminNotification(lead).catch((err) =>
       console.error("Admin email error:", err.message),
     );
-    sendLeadConfirmation(lead).catch((err) =>
-      console.error("Lead email error:", err.message),
+
+    // Notify lead via email and SMS
+    sendLeadRegistrationEmail(lead).catch((err) =>
+      console.error("Lead registration email error:", err.message),
+    );
+    sendLeadRegistrationSms(lead).catch((err) =>
+      console.error("Lead registration SMS error:", err.message),
     );
 
     // IMPORTANT: return the created lead (includes lead.id)
@@ -64,16 +73,31 @@ async function createLead(req, res) {
  * Paginated list of leads with optional status/search filters
  */
 async function getLeads(req, res) {
-  const { status, search, page = 1, limit = 20 } = req.query;
+  const { status, appointment_status, search, start_date, end_date, page = 1, limit = 20 } = req.query;
   const where = {};
 
   if (status) where.status = status;
+  if (appointment_status) where.appointment_status = appointment_status;
   if (search) {
     where[Op.or] = [
       { full_name: { [Op.like]: `%${search}%` } },
       { email: { [Op.like]: `%${search}%` } },
       { service_type: { [Op.like]: `%${search}%` } },
     ];
+  }
+
+  // Date range filter (both dates optional)
+  if (start_date || end_date) {
+    where.createdAt = {};
+    if (start_date) {
+      where.createdAt[Op.gte] = new Date(start_date);
+    }
+    if (end_date) {
+      // Add 1 day to end_date to include entire day
+      const endDateObj = new Date(end_date);
+      endDateObj.setDate(endDateObj.getDate() + 1);
+      where.createdAt[Op.lt] = endDateObj;
+    }
   }
 
   const pageNum = Number(page) || 1;
@@ -560,6 +584,394 @@ async function bookAppointment(req, res) {
   }
 }
 
+/**
+ * Export leads as CSV
+ * Route: GET /api/leads/export/csv?status=&appointment_status=&search=&start_date=&end_date=
+ */
+async function exportLeadsCsv(req, res) {
+  try {
+    const { status, appointment_status, search, start_date, end_date } = req.query;
+    const where = {};
+
+    if (status) where.status = status;
+    if (appointment_status) where.appointment_status = appointment_status;
+    if (search) {
+      where[Op.or] = [
+        { full_name: { [Op.like]: `%${search}%` } },
+        { email: { [Op.like]: `%${search}%` } },
+        { service_type: { [Op.like]: `%${search}%` } },
+      ];
+    }
+    
+    // Date range filter (both dates optional)
+    if (start_date || end_date) {
+      where.createdAt = {};
+      if (start_date) {
+        where.createdAt[Op.gte] = new Date(start_date);
+      }
+      if (end_date) {
+        const endDateObj = new Date(end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        where.createdAt[Op.lt] = endDateObj;
+      }
+    }
+
+    const leads = await Lead.findAll({
+      where,
+      order: [["createdAt", "DESC"]],
+      attributes: [
+        'id',
+        'full_name',
+        'email',
+        'phone',
+        'service_type',
+        'status',
+        'appointment_status',
+        'appointment_time',
+        'createdAt',
+      ],
+    });
+
+    // Transform data for export
+    const csvData = leads.map((lead) => ({
+      'Lead ID': lead.id,
+      'Name': lead.full_name,
+      'Email': lead.email,
+      'Phone': lead.phone,
+      'Service': lead.service_type,
+      'Status': lead.status,
+      'Appointment Status': lead.appointment_status,
+      'Appointment Time': lead.appointment_time
+        ? new Date(lead.appointment_time).toLocaleString()
+        : 'N/A',
+      'Created': new Date(lead.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+    }));
+
+    const Papa = require('papaparse');
+    const csv = Papa.unparse(csvData);
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="leads_${new Date().toISOString().split('T')[0]}.csv"`
+    );
+    res.send(csv);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Failed to export CSV' });
+  }
+}
+
+/**
+ * Export leads as XLSX
+ * Route: GET /api/leads/export/xlsx?status=&appointment_status=&search=&start_date=&end_date=
+ */
+async function exportLeadsXlsx(req, res) {
+  try {
+    const { status, appointment_status, search, start_date, end_date } = req.query;
+    const where = {};
+
+    if (status) where.status = status;
+    if (appointment_status) where.appointment_status = appointment_status;
+    if (search) {
+      where[Op.or] = [
+        { full_name: { [Op.like]: `%${search}%` } },
+        { email: { [Op.like]: `%${search}%` } },
+        { service_type: { [Op.like]: `%${search}%` } },
+      ];
+    }
+    
+    // Date range filter (both dates optional)
+    if (start_date || end_date) {
+      where.createdAt = {};
+      if (start_date) {
+        where.createdAt[Op.gte] = new Date(start_date);
+      }
+      if (end_date) {
+        const endDateObj = new Date(end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        where.createdAt[Op.lt] = endDateObj;
+      }
+    }
+
+    const leads = await Lead.findAll({
+      where,
+      order: [["createdAt", "DESC"]],
+      attributes: [
+        'id',
+        'full_name',
+        'email',
+        'phone',
+        'service_type',
+        'status',
+        'appointment_status',
+        'appointment_time',
+        'createdAt',
+      ],
+    });
+
+    // Transform data for export
+    const xlsxData = leads.map((lead) => {
+      const formatDate = (dateVal) => {
+        if (!dateVal) return 'N/A';
+        try {
+          const date = typeof dateVal === 'string' ? new Date(dateVal) : dateVal;
+          if (isNaN(date.getTime())) return 'N/A';
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        } catch (e) {
+          return 'N/A';
+        }
+      };
+      
+      return {
+        'Lead ID': lead.id,
+        'Name': lead.full_name,
+        'Email': lead.email,
+        'Phone': lead.phone,
+        'Service': lead.service_type,
+        'Status': lead.status,
+        'Appointment Status': lead.appointment_status,
+        'Appointment Time': formatDate(lead.appointment_time),
+        'Created': formatDate(lead.createdAt),
+      };
+    });
+
+    const XLSX = require('xlsx');
+    const worksheet = XLSX.utils.json_to_sheet(xlsxData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Leads');
+
+    // Set column widths
+    worksheet['!cols'] = [
+      { wch: 10 },
+      { wch: 20 },
+      { wch: 25 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 12 },
+      { wch: 18 },
+      { wch: 20 },
+      { wch: 20 },
+    ];
+
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="leads_${new Date().toISOString().split('T')[0]}.xlsx"`
+    );
+    res.send(buffer);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Failed to export XLSX' });
+  }
+}
+
+/**
+ * Export leads as PDF with summary page
+ * Route: GET /api/leads/export/pdf?status=&appointment_status=&search=&start_date=&end_date=
+ */
+async function exportLeadsPdf(req, res) {
+  const startTime = Date.now();
+  try {
+    const { status, appointment_status, search, start_date, end_date } = req.query;
+    console.log('[PDF Export] Request started', { status, appointment_status, search, start_date, end_date });
+    
+    const where = {};
+
+    if (status) where.status = status;
+    if (appointment_status) where.appointment_status = appointment_status;
+    if (search) {
+      where[Op.or] = [
+        { full_name: { [Op.like]: `%${search}%` } },
+        { email: { [Op.like]: `%${search}%` } },
+        { service_type: { [Op.like]: `%${search}%` } },
+      ];
+    }
+    
+    // Date range filter (both dates optional)
+    if (start_date || end_date) {
+      where.createdAt = {};
+      if (start_date) {
+        where.createdAt[Op.gte] = new Date(start_date);
+      }
+      if (end_date) {
+        const endDateObj = new Date(end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        where.createdAt[Op.lt] = endDateObj;
+      }
+    }
+
+    console.log('[PDF Export] Database query with filters:', where);
+    
+    const leads = await Lead.findAll({
+      where,
+      order: [["createdAt", "DESC"]],
+      attributes: [
+        'id',
+        'full_name',
+        'email',
+        'phone',
+        'service_type',
+        'status',
+        'appointment_status',
+        'appointment_time',
+        'createdAt',
+      ],
+    });
+
+    console.log('[PDF Export] Found leads:', leads.length);
+
+    // Calculate summary stats
+    const totalLeads = leads.length;
+    const statusBreakdown = {};
+    const appointmentBreakdown = {};
+
+    leads.forEach(lead => {
+      statusBreakdown[lead.status] = (statusBreakdown[lead.status] || 0) + 1;
+      appointmentBreakdown[lead.appointment_status] = (appointmentBreakdown[lead.appointment_status] || 0) + 1;
+    });
+
+    console.log('[PDF Export] Status breakdown:', statusBreakdown);
+    console.log('[PDF Export] Appointment breakdown:', appointmentBreakdown);
+
+    // Transform data for table (only: ID, Name, Email, Phone, Service, Appt Status, Created)
+    const tableData = leads.map((lead) => [
+      String(lead.id),
+      lead.full_name || '',
+      lead.email || '',
+      lead.phone || '',
+      lead.service_type || '',
+      lead.appointment_status || '',
+      lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : 'N/A',
+    ]);
+
+    console.log('[PDF Export] Starting PDF generation...');
+    
+    // Use pdfmake with minimal styling for speed
+    const pdfmake = require('pdfmake/build/pdfmake');
+    const pdfFonts = require('pdfmake/build/vfs_fonts');
+    pdfmake.vfs = pdfFonts.vfs;
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Professional, well-styled document definition
+    const docDefinition = {
+      pageMargins: [40, 40, 40, 40],
+      content: [
+        // Header section
+        {
+          text: 'Lead Export Report',
+          fontSize: 24,
+          bold: true,
+          color: '#1F2937',
+          margin: [0, 0, 0, 8],
+        },
+        {
+          text: `Generated on ${dateStr}`,
+          fontSize: 10,
+          color: '#6B7280',
+          margin: [0, 0, 0, 20],
+        },
+        
+        // Stats section
+        {
+          columns: [
+            {
+              text: [
+                { text: 'Total Leads: ', bold: true, color: '#374151' },
+                { text: String(totalLeads), fontSize: 14, bold: true, color: '#16A34A' },
+              ],
+              width: '50%',
+            },
+            {
+              text: '',
+              width: '50%',
+            },
+          ],
+          margin: [0, 0, 0, 20],
+        },
+
+        // Data table
+        {
+          table: {
+            headerRows: 1,
+            widths: ['7%', '16%', '22%', '13%', '16%', '14%', '16%'],
+            body: [
+              [
+                { text: 'ID', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'center', padding: [8, 4] },
+                { text: 'Name', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+                { text: 'Email', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+                { text: 'Phone', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+                { text: 'Service', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+                { text: 'Appt Status', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+                { text: 'Created', bold: true, fontSize: 11, color: '#FFFFFF', fillColor: '#1F2937', alignment: 'left', padding: [8, 4] },
+              ],
+              ...tableData.map((row, idx) => [
+                { text: row[0], fontSize: 9, alignment: 'center', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[1], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[2], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[3], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[4], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[5], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+                { text: row[6], fontSize: 9, alignment: 'left', padding: [6, 4], fillColor: idx % 2 === 0 ? '#F9FAFB' : '#FFFFFF' },
+              ]),
+            ],
+          },
+          layout: {
+            hLineWidth: (i) => i === 0 || i === 1 ? 2 : 0.5,
+            vLineWidth: () => 0.5,
+            hLineColor: (i) => i === 0 ? '#1F2937' : '#E5E7EB',
+            vLineColor: () => '#E5E7EB',
+            paddingLeft: () => 4,
+            paddingRight: () => 4,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+      styles: {
+        normal: {
+          font: 'Helvetica',
+        },
+      },
+    };
+
+    const pdfDoc = pdfmake.createPdf(docDefinition);
+    const fileName = `leads_${new Date().toISOString().split('T')[0]}.pdf`;
+
+    console.log('[PDF Export] PDF object created, generating buffer...');
+
+    // pdfmake@0.3.x getBuffer returns a Promise (callback form can hang)
+    const generated = await pdfDoc.getBuffer();
+    const buffer = Buffer.isBuffer(generated) ? generated : Buffer.from(generated);
+
+    console.log('[PDF Export] Buffer generated successfully, size:', buffer.length, 'bytes');
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.send(buffer);
+
+    const duration = Date.now() - startTime;
+    console.log('[PDF Export] ✅ Export successful', {
+      fileName,
+      totalLeads,
+      bufferSize: buffer.length,
+      durationMs: duration,
+    });
+    return;
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error('[PDF Export] ❌ Export failed after', duration, 'ms:', error.message);
+    console.error('[PDF Export] Full error:', error);
+    return res.status(500).json({ message: 'Failed to export PDF' });
+  }
+}
+
 module.exports = {
   createLead,
   getLeads,
@@ -569,4 +981,7 @@ module.exports = {
   getLeadsSeries,
   getAvailableSlots,
   bookAppointment,
+  exportLeadsCsv,
+  exportLeadsXlsx,
+  exportLeadsPdf,
 };

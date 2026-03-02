@@ -132,4 +132,35 @@ async function sendReminderSms(lead, { label, contactMethod = "Call" }) {
   }
 }
 
-module.exports = { sendBookingConfirmationSms, sendReminderSms };
+async function sendLeadRegistrationSms(lead) {
+  const toNumber = resolveDestination(lead);
+  if (!toNumber) return;
+
+  if (!hasConfig()) {
+    console.warn("Twilio configuration missing. Skipping SMS send.");
+    return;
+  }
+
+  const body = `Hi ${lead.full_name}, thank you for registering with us! Our team will review your request and get back to you shortly.`;
+
+  try {
+    await sendRequest(
+      `/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+      {
+        To: toNumber,
+        From: TWILIO_FROM_NUMBER,
+        Body: body,
+      }
+    );
+  } catch (error) {
+    console.error(
+      `Twilio SMS error for lead ${lead?.id || "unknown"} (${toNumber}): ${error.message}`
+    );
+  }
+}
+
+module.exports = {
+  sendBookingConfirmationSms,
+  sendReminderSms,
+  sendLeadRegistrationSms,
+};

@@ -22,11 +22,6 @@ function RegistrationSuccessPage() {
                             Next step: Join the WhatsApp group for updates,
                             onboarding details, and important announcements.
                         </p>
-                        {leadId ? (
-                            <p className="registration-success-leadid">
-                                Registration ID: <strong>{leadId}</strong>
-                            </p>
-                        ) : null}
 
                         <div className="registration-success-actions">
                             <a
