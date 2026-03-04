@@ -8,7 +8,7 @@ const steps = [
         id: 1,
         icon: watchVideo,
         title: "STEP 1",
-        description: "Watch the short masterclass overview video above.",
+        description: "Watch the 2-minute breakdown video above.",
     },
     {
         id: 2,

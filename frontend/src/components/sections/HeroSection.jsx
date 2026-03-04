@@ -14,8 +14,7 @@ const HeroSection = () => {
             <div className="main-content">
                 <h1 className="hero-title">The 3-Day Tech Accelerator Masterclass</h1>
                 <p className="description">
-                    Three intensive sessions to help you become job-ready in UI/UX
-                    Design, Data Analysis, or Full Stack Development.
+                    Three High-Income Skills. Three Power-Packed Masterclasses. Three Days Each.
                 </p>
                 <div className="event-date">
                     <span className="date-label">LIVE EVENT:</span>
