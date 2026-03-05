@@ -20,7 +20,7 @@ const steps = [
         id: 3,
         icon: bookInterview,
         title: "STEP 3",
-        description: "Book your interview slot on the next page.",
+        description: "Join the Waitlist.",
     },
 ];
 

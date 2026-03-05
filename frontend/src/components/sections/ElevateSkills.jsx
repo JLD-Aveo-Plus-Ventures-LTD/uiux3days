@@ -4,17 +4,24 @@ const ElevateSkills = () => {
     return (
         <section className="elevate-skills" id="elevate-skills">
             <div className="elevate-skills-inner">
-                <div className="elevate-copy">
-                    <h2>Elevate Your Skills Today!</h2>
-                    <p>
-                        Watch first, decide with confidence, and secure your seat
-                        for the next accelerator cohort.
-                    </p>
-                </div>
+                <h2 className="elevate-title">Elevate Your Skills Today!</h2>
 
-                <a href="https://chat.whatsapp.com/HVvtUAdwpu9CToJja1qBwa?mode=gi_t" className="elevate-button" target="_blank" rel="noopener noreferrer">
-                    BOOK YOUR SLOT
-                </a>
+                <div className="elevate-actions">
+                    <p>
+                        Watch the video. Fill the form. Confirm your slot.
+                        <br />
+                        3 Days Can Change Your Direction.
+                    </p>
+
+                    <a
+                        href="https://chat.whatsapp.com/HVvtUAdwpu9CToJja1qBwa?mode=gi_t"
+                        className="elevate-button"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Book Your Slot
+                    </a>
+                </div>
             </div>
         </section>
     );

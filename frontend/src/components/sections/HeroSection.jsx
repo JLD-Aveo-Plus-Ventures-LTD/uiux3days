@@ -17,7 +17,7 @@ const HeroSection = () => {
                     Three High-Income Skills. Three Power-Packed Masterclasses. Three Days Each.
                 </p>
                 <div className="event-date">
-                    <span className="date-label">LIVE EVENT:</span>
+                    <span className="date-label">Event Date: LIVE;</span>
                     <span className="date-value">March 23rd - 27th, 2026</span>
                 </div>
                 {/* <a href="#booking-form" className="hero-cta">
