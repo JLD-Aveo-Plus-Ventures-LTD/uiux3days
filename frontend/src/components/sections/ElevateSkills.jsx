@@ -19,7 +19,7 @@ const ElevateSkills = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        Book Your Slot
+                        Join The Waitlist
                     </a>
                 </div>
             </div>
