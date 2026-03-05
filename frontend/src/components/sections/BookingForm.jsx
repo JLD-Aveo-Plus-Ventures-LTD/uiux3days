@@ -282,7 +282,7 @@ const BookingForm = () => {
                     {/* Interview Method */}
                     <div className="form-group">
                         <label htmlFor="interviewMethod">
-                            Preferred Interview Method
+                            How can we reach you?
                         </label>
                         <select
                             id="interviewMethod"
