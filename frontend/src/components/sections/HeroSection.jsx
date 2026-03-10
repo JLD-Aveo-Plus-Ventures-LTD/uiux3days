@@ -5,6 +5,9 @@ import videoPoster from "../../assets/images/video-bg.png";
 
 const HeroSection = () => {
     const videoRef = useRef(null);
+    const hasUserInteractedRef = useRef(false);
+    const skipNextVideoClickRef = useRef(false);
+    const suppressClickUntilRef = useRef(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showIcon, setShowIcon] = useState(false);
 
@@ -26,13 +29,60 @@ const HeroSection = () => {
             }
         };
 
+        const clearUnlockListeners = () => {
+            window.removeEventListener("pointerdown", unlockAudioOnce, true);
+            window.removeEventListener("touchstart", unlockAudioOnce, true);
+            window.removeEventListener("keydown", unlockAudioOnce, true);
+        };
+
+        const unlockAudioOnce = async (event) => {
+            if (hasUserInteractedRef.current) {
+                return;
+            }
+
+            const target = event.target;
+            if (target instanceof Element && target.closest(".video-background")) {
+                skipNextVideoClickRef.current = true;
+                suppressClickUntilRef.current = Date.now() + 500;
+            }
+
+            hasUserInteractedRef.current = true;
+            video.muted = false;
+            video.defaultMuted = false;
+            video.volume = 1;
+
+            if (video.paused) {
+                try {
+                    await video.play();
+                } catch {
+                    setIsPlaying(false);
+                }
+            }
+
+            clearUnlockListeners();
+        };
+
         startVideo();
+
+        window.addEventListener("pointerdown", unlockAudioOnce, { capture: true });
+        window.addEventListener("touchstart", unlockAudioOnce, { capture: true, passive: true });
+        window.addEventListener("keydown", unlockAudioOnce, { capture: true });
+
+        return () => {
+            clearUnlockListeners();
+        };
     }, []);
 
     const handleVideoClick = async () => {
         const video = videoRef.current;
 
         if (!video) {
+            return;
+        }
+
+        if (skipNextVideoClickRef.current || Date.now() < suppressClickUntilRef.current) {
+            skipNextVideoClickRef.current = false;
+            suppressClickUntilRef.current = 0;
             return;
         }
 
