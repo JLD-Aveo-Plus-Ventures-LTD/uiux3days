@@ -20,7 +20,8 @@ const steps = [
         id: 3,
         icon: bookInterview,
         title: "STEP 3",
-        description: "Join the Waitlist.",
+        ctaLabel: "Join the Waitlist",
+        ctaHref: "https://chat.whatsapp.com/HVvtUAdwpu9CToJja1qBwa?mode=gi_t",
     },
 ];
 
@@ -34,7 +35,17 @@ const SecureYourSeat = () => {
                     <article key={step.id} className="step-card">
                         <img src={step.icon} className="icon-circle" alt={step.title} />
                         <h3 className="step-title">{step.title}</h3>
-                        <p className="step-description">{step.description}</p>
+                        {step.description && <p className="step-description">{step.description}</p>}
+                        {step.ctaHref && (
+                            <a
+                                href={step.ctaHref}
+                                className="step-waitlist-button"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {step.ctaLabel}
+                            </a>
+                        )}
                     </article>
                 ))}
             </div>

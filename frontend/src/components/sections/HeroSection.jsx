@@ -5,20 +5,50 @@ import videoPoster from "../../assets/images/video-bg.png";
 
 const HeroSection = () => {
     const videoRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [showIcon, setShowIcon] = useState(false);
 
-    const handleVideoClick = (e) => {
-        if (!videoRef.current) return;
-        
-        // Toggle play/pause
-        if (isPlaying) {
-            videoRef.current.pause();
-        } else {
-            videoRef.current.play();
+    useEffect(() => {
+        const video = videoRef.current;
+
+        if (!video) {
+            return;
         }
-        
-        // Show icon feedback
+
+        video.muted = true;
+        video.defaultMuted = true;
+
+        const startVideo = async () => {
+            try {
+                await video.play();
+            } catch {
+                setIsPlaying(false);
+            }
+        };
+
+        startVideo();
+    }, []);
+
+    const handleVideoClick = async () => {
+        const video = videoRef.current;
+
+        if (!video) {
+            return;
+        }
+
+        if (video.paused) {
+            setIsPlaying(true);
+
+            try {
+                await video.play();
+            } catch {
+                setIsPlaying(false);
+            }
+        } else {
+            video.pause();
+            setIsPlaying(false);
+        }
+
         setShowIcon(true);
         setTimeout(() => setShowIcon(false), 800);
     };
@@ -29,12 +59,6 @@ const HeroSection = () => {
 
     const handlePauseVideo = () => {
         setIsPlaying(false);
-    };
-
-    const handleCloseVideo = () => {
-        if (videoRef.current) {
-            videoRef.current.pause();
-        }
     };
 
     return (
@@ -62,6 +86,7 @@ const HeroSection = () => {
                         poster={videoPoster}
                         preload="auto"
                         autoPlay
+                        muted
                         loop
                         controls
                         playsInline
