@@ -50,6 +50,32 @@
     font-size: 0.95rem;
 }
 
+.step-waitlist-button {
+    margin-top: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.75rem 1.35rem;
+    background: #20852f;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.step-waitlist-button:hover {
+    background: #176723;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(23, 103, 35, 0.3);
+}
+
+.step-waitlist-button:focus-visible {
+    outline: 2px solid #0d7a22;
+    outline-offset: 3px;
+}
+
 @media (max-width: 768px) {
     .secure-seat-container {
         margin-top: 2rem;
@@ -62,5 +88,10 @@
 
     .step-card {
         padding: 0.75rem 0;
+    }
+
+    .step-waitlist-button {
+        font-size: 0.85rem;
+        padding: 0.72rem 1.2rem;
     }
 }

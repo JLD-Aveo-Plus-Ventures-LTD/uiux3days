@@ -84,8 +84,7 @@
 
 .video-click-overlay {
     position: absolute;
-    inset: 0;
-    bottom: 48px;
+    inset: 0 0 56px;
     z-index: 2;
     cursor: pointer;
 }
