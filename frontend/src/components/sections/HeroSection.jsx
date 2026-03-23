@@ -120,7 +120,7 @@ const HeroSection = () => {
                 </p>
                 <div className="event-date">
                     <span className="date-label">Event Date: LIVE;</span>
-                    <span className="date-value">March 23rd - 25th, 2026</span>
+                    <span className="date-value">April 14th - 16th, 2026</span>
                 </div>
                 {/* <a href="#booking-form" className="hero-cta">
                     APPLY NOW & SECURE YOUR SEAT
