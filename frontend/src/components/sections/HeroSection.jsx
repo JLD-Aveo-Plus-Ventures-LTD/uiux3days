@@ -114,13 +114,13 @@ const HeroSection = () => {
     return (
         <section className="hero-container" id="hero">
             <div className="main-content">
-                <h1 className="hero-title">The 3-Day Tech Accelerator Masterclass</h1>
+                <h1 className="hero-title">The 5-Day Tech Accelerator Masterclass</h1>
                 <p className="description">
-                    Three High-Income Skills. Three Power-Packed Masterclasses. Three Days Each.
+                    Three High-Income Skills. Three Power-Packed Masterclasses. Five Days Each.
                 </p>
                 <div className="event-date">
-                    <span className="date-label">Event Date: LIVE;</span>
-                    <span className="date-value">April 14th - 16th, 2026</span>
+                    <span className="date-label">Event Date: </span>
+                    <span className="date-value">May 11th - 15th, 2026</span>
                 </div>
                 {/* <a href="#booking-form" className="hero-cta">
                     APPLY NOW & SECURE YOUR SEAT

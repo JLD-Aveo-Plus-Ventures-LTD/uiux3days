@@ -10,7 +10,7 @@ const ElevateSkills = () => {
                     <p>
                         Watch the video. Fill the form. Confirm your slot.
                         <br />
-                        3 Days Can Change Your Direction.
+                        5 Days Can Change Your Direction.
                     </p>
 
                     <a
