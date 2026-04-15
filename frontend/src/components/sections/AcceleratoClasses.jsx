@@ -5,7 +5,7 @@ import fullstackImage from "../../assets/images/fullstack.jpg";
 
 const classes = [
     {
-        title: "3-Day UI/UX Design Masterclass",
+        title: "5-Day UI/UX Design Masterclass",
         subtitle: "Master practical UI/UX workflows used by modern product teams.",
         bullets: [
             "Watch us build a professional Mobile App and Website live from scratch, so you see exactly how it’s done.",
@@ -19,7 +19,7 @@ const classes = [
         imageAlt: "UI/UX masterclass preview",
     },
     {
-        title: "3-Day Data Analysis Masterclass",
+        title: "5-Day Data Analysis Masterclass",
         subtitle: "Turn raw datasets into clear, business-ready insights.",
         bullets: [
             "Watch us turn raw datasets into clear, business ready insights live, so you see exactly how a real analyst works.",
@@ -33,7 +33,7 @@ const classes = [
         imageAlt: "Data analysis masterclass preview",
     },
     {
-        title: "3-Day Full Stack Development Masterclass",
+        title: "5-Day Full Stack Development Masterclass",
         subtitle: "Build complete web features across frontend and backend.",
         bullets: [
             "Watch us build complete web features across the frontend and backend live from scratch, so you see exactly how the full picture comes together.",

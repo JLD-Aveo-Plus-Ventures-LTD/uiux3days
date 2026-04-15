@@ -174,7 +174,7 @@ function SelectInterviewSlot({ leadId }) {
                     <p className="select-interview-subtitle">
                         We have received your application! Since we only accept
                         15 students for the <br />
-                        March 6-8 cohort, we need to have a quick 10-minute chat
+                        May 11-15 cohort, we need to have a quick 10-minute chat
                         to ensure you are a right fit.
                     </p>
                 </div>
